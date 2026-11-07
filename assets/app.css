@@ -74,7 +74,7 @@ a{ color:inherit; text-decoration:none; }
 /* ============================================================
    SHELL
    ============================================================ */
-.app{ height:100%; display:flex; flex-direction:column; }
+.app{ height:100%; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
 
 /* --- top bar --- */
 .topbar{
@@ -132,7 +132,7 @@ a{ color:inherit; text-decoration:none; }
 .rail button:hover{ color:var(--ink-2); background:rgba(255,255,255,.04); }
 .rail button.on{ color:var(--aqua); background:rgba(62,208,218,.10); }
 
-.main{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; position:relative; }
+.main{ flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative; }
 .scroll{ flex:1 1 auto; overflow-y:auto; overflow-x:hidden; }
 .scroll::-webkit-scrollbar{ width:9px; }
 .scroll::-webkit-scrollbar-thumb{ background:#1E3038; border-radius:99px; border:2px solid var(--card); }

@@ -973,6 +973,7 @@ function boot() {
   const th = new URLSearchParams(location.search).get('theme') || 'c';
   if (th !== 'off') document.body.classList.add('theme-' + th);
   document.body.innerHTML = `
+    <div class="app">
     ${topbarHTML()}
     <div class="shell">
       <nav class="rail">
@@ -990,6 +991,7 @@ function boot() {
       <button data-nav="casino">${I.casino}<span>Casino</span></button>
       <button data-nav="chat">${I.chat}<span>Chat</span></button>
     </nav>
+    </div>
 
     <div class="sheet" id="sheet">
       <div class="grab"><i></i></div>
