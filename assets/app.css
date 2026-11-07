@@ -18,19 +18,19 @@
 
   /* ink */
   --ink:       #FFFFFF;
-  --ink-2:     #A9C6D2;
-  --ink-3:     #6B8794;
-  --ink-4:     #4A606C;
+  --ink-2:     #BFD5DE;
+  --ink-3:     #A6C0CB;
+  --ink-4:     #97AEB9;
 
   /* ---- semantic type colours ----
      score  = what happened   (brightest)
      team   = who             (near white)
-     market = what kind of bet(dim — labels recede)
+     market = what kind of bet(quiet, but still AA-legible)
      price  = what you can act on (the only accent)
   ---------------------------------- */
   --c-score:  #FFFFFF;
   --c-team:   #DCE9F0;
-  --c-market: #78909E;
+  --c-market: #B0C6D0;
   --c-price:  #3ED0DA;
 
   /* accents */
@@ -38,9 +38,11 @@
   --aqua-hi:   #C4F4F1;
   --aqua-deep: #113C4B;
   --aqua-deep2:#0E3543;
-  --live:      #F41F50;
-  --up:        #35D39A;
-  --down:      #FF5B6E;
+  --live:      #F41F50;   /* fills, dots, borders */
+  --live-tx:   #FF7B90;   /* the same red, legible as text */
+  --live-badge:#CE1533;   /* dark enough for white text on top */
+  --up:        #4ADE9F;
+  --down:      #FF8794;
   --gold:      #F7C860;
 
   /* metrics */
@@ -287,7 +289,7 @@ body.route-bets .main::after{
 .tab.on{ color:var(--aqua); border-bottom-color:var(--aqua); background:rgba(62,208,218,.07); }
 .tab .n{
   min-width:18px; height:16px; padding:0 5px; border-radius:99px;
-  background:var(--live); color:#fff; font-size:10px; font-weight:700;
+  background:var(--live-badge); color:#fff; font-size:10px; font-weight:700;
   display:grid; place-items:center;
 }
 .tabsrule{ height:1px; background:var(--hair); margin:0 16px; }
@@ -304,7 +306,7 @@ body.route-bets .main::after{
   animation:liveBlink 1.1s steps(1, end) infinite;
 }
 .tab[data-tab="live"] .n{ animation:liveBlinkSoft 1.1s steps(1, end) infinite; }
-.tab[data-tab="live"].on{ color:var(--live); }
+.tab[data-tab="live"].on{ color:var(--live-tx); }
 .tab[data-tab="live"].on::after,
 .tab[data-tab="live"].on .n{ animation-duration:.82s; }
 @keyframes liveBlink{
@@ -337,7 +339,7 @@ body.route-bets .main::after{
   font-size:12.5px; color:var(--ink-2);
 }
 .chip .x{ color:var(--ink-4); display:grid; place-items:center; }
-.chip .x:hover{ color:var(--live); }
+.chip .x:hover{ color:var(--live-tx); }
 .chip .cdot{ width:6px;height:6px;border-radius:50%; }
 
 /* ============================================================
@@ -353,7 +355,7 @@ body.route-bets .main::after{
   border-bottom:1px solid var(--hair);
   font-size:11.5px; color:var(--ink-3);
 }
-.mcard .head .clive{ color:var(--live); font-weight:700; display:flex; align-items:center; gap:5px; }
+.mcard .head .clive{ color:var(--live-tx); font-weight:700; display:flex; align-items:center; gap:5px; }
 .mcard .head .cdot{ width:5px;height:5px;border-radius:50%;background:var(--live); }
 .mcard .head .clock{ color:var(--aqua); font-weight:650; }
 .mcard .head .spacer{ margin-left:auto; }
@@ -379,7 +381,7 @@ body.route-bets .main::after{
   transition:background .12s, border-color .12s, transform .12s;
 }
 .o:hover{ background:var(--tile-hi); border-color:var(--hair-2); }
-.o .oname{ font-size:11px; color:var(--c-market); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.o .oname{ font-size:11px; font-weight:500; color:var(--c-market); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .o .oval{ font-size:13.5px; font-weight:700; color:var(--c-price); }
 .o.sel{ background:var(--aqua-deep); border-color:var(--aqua); }
 .o.sel .oval{ color:var(--aqua-hi); }
@@ -413,7 +415,7 @@ body.route-bets .main::after{
 .suspended{
   margin:2px 12px 12px; padding:8px 10px; border-radius:8px;
   background:rgba(255,255,255,.03); border:1px dashed var(--hair-2);
-  color:var(--ink-3); font-size:12px; display:flex; align-items:center; gap:7px;
+  color:var(--ink-3); font-size:12px; font-weight:500; display:flex; align-items:center; gap:7px;
 }
 
 /* inline home row (desktop "Your matches" table) */
@@ -451,7 +453,7 @@ body.route-bets .main::after{
 }
 .fcard .fh{ display:flex; align-items:center; gap:7px; font-size:11px; color:var(--ink-3); margin-bottom:8px; }
 .fcard .fh .cdot{ width:5px;height:5px;border-radius:50%;background:var(--live); }
-.fcard .fh .l{ color:var(--live); font-weight:700; }
+.fcard .fh .l{ color:var(--live-tx); font-weight:700; }
 .fcard .fh .k{ margin-left:auto; }
 
 /* page headers with back arrow */
@@ -521,10 +523,10 @@ body.route-bets .main::after{
 .mcard.pre .trow .tname,
 .mrow.pre .who .t .n{ color:#8FA8B5; font-weight:550; }
 .mcard.pre .head,
-.mrow.pre .when{ color:#5C7684; }
-.mcard.pre .head .mkt{ color:#5C7684; }
+.mrow.pre .when{ color:var(--ink-3); font-weight:500; }
+.mcard.pre .head .mkt{ color:var(--ink-3); font-weight:500; }
 .mcard.pre .o{ background:#15262E; border-color:rgba(255,255,255,.055); }
-.mcard.pre .o .oname{ color:#6B8794; }
+.mcard.pre .o .oname{ color:var(--ink-3); }
 
 .scoreboard.live{ box-shadow:inset 3px 0 0 rgba(244,31,80,.72); }
 
@@ -546,7 +548,7 @@ body.route-bets .main::after{
 }
 .sb-top{ display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:11px; color:var(--ink-3); }
 .sb-top .cdot{ width:5px;height:5px;border-radius:50%;background:var(--live); }
-.sb-top .l{ color:var(--live); font-weight:700; }
+.sb-top .l{ color:var(--live-tx); font-weight:700; }
 .sb-top .k{ color:var(--aqua); font-weight:650; }
 .sb-top .sp{ margin-left:auto; display:flex; align-items:center; gap:7px; }
 .sbtn{
@@ -610,7 +612,7 @@ body.route-bets .main::after{
   border-radius:99px; background:var(--aqua); color:#04222B; font-size:10px; font-weight:800; margin-left:5px;
 }
 .sliptabs .clr{ margin-left:auto; font-size:11.5px; color:var(--ink-3); padding:9px 4px; }
-.sliptabs .clr:hover{ color:var(--live); }
+.sliptabs .clr:hover{ color:var(--live-tx); }
 
 .slipbody{ flex:1 1 auto; overflow-y:auto; padding:10px 12px; }
 .slipbody::-webkit-scrollbar{ width:8px; }
@@ -630,7 +632,7 @@ body.route-bets .main::after{
 .bet .bt .pr{ margin-left:auto; font-size:13.5px; font-weight:750; color:var(--aqua); }
 .bet.changed .bt .pr{ color:var(--gold); }
 .bet .bt .rm{ color:var(--ink-4); display:grid; place-items:center; padding:2px; }
-.bet .bt .rm:hover{ color:var(--live); }
+.bet .bt .rm:hover{ color:var(--live-tx); }
 .bet .bm{ font-size:11px; color:var(--ink-4); margin-top:3px; line-height:1.35; }
 
 .bet .changedbar{
@@ -1043,11 +1045,11 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 .herotop{ display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
 .hlive{
   display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:800;
-  letter-spacing:.07em; color:#fff; background:var(--live); padding:4px 9px; border-radius:6px;
+  letter-spacing:.07em; color:#fff; background:var(--live-badge); padding:4px 9px; border-radius:6px;
 }
 .hlive i{ width:6px;height:6px;border-radius:99px;background:#fff; animation:blip 1.5s infinite; }
 @keyframes blip{ 0%,100%{opacity:1} 50%{opacity:.35} }
-.hkick,.hmeta{ font-size:11.5px; color:#A9C6D2; }
+.hkick,.hmeta{ font-size:11.5px; font-weight:500; color:var(--ink-2); }
 .herotop .hmeta{ margin-left:auto; }
 
 .heromid{ display:flex; align-items:center; gap:14px; margin-bottom:13px; }
@@ -1059,8 +1061,8 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 }
 .hscore{ flex:0 0 auto; display:flex; align-items:center; gap:8px; }
 .hscore b{ font-size:33px; font-weight:800; color:#fff; line-height:1; font-variant-numeric:tabular-nums; }
-.hscore span{ font-size:19px; color:#6B8794; }
-.hvs{ flex:0 0 auto; font-size:14px; color:#6B8794; }
+.hscore span{ font-size:19px; font-weight:600; color:var(--ink-3); }
+.hvs{ flex:0 0 auto; font-size:14px; font-weight:600; color:var(--ink-3); }
 
 .heroodds{ display:flex; gap:7px; align-items:stretch; }
 .heroodds .o{ flex:1 1 0; background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16); }
@@ -1097,7 +1099,7 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 }
 .histsum .k{ font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--c-market); }
 .histsum .v{ font-size:17px; font-weight:750; color:var(--ink); margin-top:3px; font-variant-numeric:tabular-nums; }
-.histsum .v.up{ color:var(--up); } .histsum .v.dn{ color:var(--live); }
+.histsum .v.up{ color:var(--up); } .histsum .v.dn{ color:var(--live-tx); }
 .mb.hist{ border-color:var(--hair-2); }
 .shareRow{ margin-top:10px; padding-top:9px; border-top:1px dashed var(--hair-2); }
 .shb{
@@ -1208,7 +1210,7 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 }
 .sitefoot .sf-links span{ cursor:default; }
 .sitefoot .sf-note{
-  margin-top:10px; font-size:11px; line-height:1.55; color:#56707C;
+  margin-top:10px; font-size:11px; font-weight:500; line-height:1.55; color:var(--ink-3);
 }
 @media (max-width:640px){
   .sitefoot{ margin:22px 12px 18px; }

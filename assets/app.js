@@ -414,7 +414,7 @@ function pageHome() {
 function rowHTML(m) {
   const h = HB.teams[m.home], a = HB.teams[m.away];
   const isLive = m.state === 'live';
-  const when = isLive ? `<span style="color:var(--live);font-weight:700">LIVE</span><span class="day">${m.clock}</span>`
+  const when = isLive ? `<span style="color:var(--live-tx);font-weight:700">LIVE</span><span class="day">${m.clock}</span>`
     : `${m.kick}<span class="day">${m.day}</span>`;
   const susp = m.susp;
   const oddsHtml = susp
