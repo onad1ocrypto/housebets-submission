@@ -290,30 +290,31 @@ body.route-bets .main::after{
   position:relative;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:6px; min-height:78px; padding:10px 5px 9px;
-  border:1px solid rgba(255,255,255,.20); border-radius:11px;
-  /* A translucent white wash stayed nearly black on this background, so
-     the tiles now carry a real lighter slate-teal instead of an overlay. */
-  background:linear-gradient(180deg, #22454F 0%, #17323C 100%);
-  box-shadow:0 1px 0 rgba(255,255,255,.10) inset, 0 2px 8px rgba(0,0,0,.30);
+  border:1px solid rgba(255,255,255,.22); border-radius:11px;
+  /* Light blue taken from the Housebets cyan (#3ED0DA) so the menu reads
+     as part of the brand while staying clearly its own surface. A real
+     colour, not a white wash: a wash over near-black still looks black. */
+  background:linear-gradient(180deg, #2F7085 0%, #1F5464 100%);
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 2px 8px rgba(0,0,0,.30);
   font-size:11.5px; font-weight:650; color:#FFFFFF;
   text-align:center; line-height:1.2;
   transition:border-color .16s ease, background .16s ease, color .16s ease, transform .16s ease;
 }
 .tab:hover{
-  color:#FFFFFF; border-color:rgba(255,255,255,.34);
-  background:linear-gradient(180deg, #2E5765 0%, #20414E 100%);
+  color:#FFFFFF; border-color:rgba(255,255,255,.38);
+  background:linear-gradient(180deg, #3B8399 0%, #27657A 100%);
 }
 .tab.on{
   color:#FFFFFF;
   border-color:#57E3EC;
-  background:linear-gradient(180deg, #1F6B7A 0%, #14505C 100%);
-  box-shadow:0 0 0 1px rgba(87,227,236,.40), 0 3px 12px rgba(0,0,0,.34);
+  background:linear-gradient(180deg, #1E6B80 0%, #134E5E 100%);
+  box-shadow:0 0 0 1px rgba(87,227,236,.45), 0 3px 12px rgba(0,0,0,.34);
 }
 /* the icon + count badge sit together so the badge can hang off the ball */
 .tab .tico{ position:relative; display:grid; place-items:center; }
 .tab .n{
   position:absolute; top:-6px; right:-11px;
-  border:2px solid #1B3944;
+  border:2px solid #2A6678;
   min-width:18px; height:18px; padding:0 5px; border-radius:99px;
   background:var(--live-badge); color:#fff; font-size:10px; font-weight:700;
   display:grid; place-items:center;
@@ -327,7 +328,7 @@ body.route-bets .main::after{
    broadcast light rather than a hover effect. The counter blinks
    with it, and both beat faster once you are on the live page.
 --------------------------------------------------------------- */
-.tab[data-tab="live"]{ color:#FFA7B6; }
+.tab[data-tab="live"]{ color:#FFFFFF; }
 .tab[data-tab="live"]::after{
   content:""; flex:0 0 auto; width:6px; height:6px; border-radius:99px;
   background:var(--live); margin-left:1px;
