@@ -699,12 +699,12 @@ function pageMatch() {
       </span>
     </div>
     <div class="sb-score">
-      <div class="sb-team">${crest(m.home, 34)}<div class="sb-tmeta"><span class="nm">${esc(h.name)}</span>${sbGoals(m, 'h')}</div></div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div class="sb-team">${crest(m.home, 34)}<div class="sb-tmeta"><span class="nm"><span class="nm-full">${esc(h.name)}</span><span class="nm-short">${esc(h.sname)}</span></span>${sbGoals(m, 'h')}</div></div>
+      <div class="sb-nums">
         ${m.state === 'live' ? `<span class="sb-num">${m.hs}</span><span class="sb-dash">-</span><span class="sb-num">${m.as}</span>`
         : `<span style="color:var(--ink-3);font-size:13px">Not started</span>`}
       </div>
-      <div class="sb-team right">${crest(m.away, 34)}<div class="sb-tmeta"><span class="nm">${esc(a.name)}</span>${sbGoals(m, 'a')}</div></div>
+      <div class="sb-team right">${crest(m.away, 34)}<div class="sb-tmeta"><span class="nm"><span class="nm-full">${esc(a.name)}</span><span class="nm-short">${esc(a.sname)}</span></span>${sbGoals(m, 'a')}</div></div>
     </div>
   </div>
 
@@ -879,7 +879,7 @@ function mbHTML(b) {
 function renderPanel() {
   const p = $('#panel'); if (!p) return;
   if (S.route === 'bets') { p.style.display = 'none'; return; }
-  if (window.innerWidth <= 980) { p.style.display = 'none'; return; }
+  if (window.innerWidth <= 640) { p.style.display = 'none'; return; }
   p.style.display = '';
   p.classList.toggle('has-bets', S.slip.length > 0);
   p.innerHTML = `
