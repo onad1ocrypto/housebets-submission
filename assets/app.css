@@ -1225,3 +1225,37 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
     white-space:normal; overflow:visible; text-overflow:clip; line-height:1.25;
   }
 }
+
+/* ---- scoreboard incidents -------------------------------
+   Scorers sit under the team name, card counts beside the clock.
+   Both belong to the scoreline, so they stay visually subordinate
+   to it: small, muted, and never their own panel.
+---------------------------------------------------------- */
+.sb-tmeta{ min-width:0; display:flex; flex-direction:column; gap:3px; }
+.sb-team.right .sb-tmeta{ align-items:flex-end; }
+.sb-goals{ display:flex; flex-direction:column; gap:1px; }
+.sb-goals .sg{
+  display:flex; align-items:center; gap:4px; white-space:nowrap;
+  font-size:10.5px; font-weight:600; color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+}
+.sb-team.right .sb-goals .sg{ flex-direction:row-reverse; }
+.sg-ball{
+  flex:0 0 auto; width:9px; height:9px; border-radius:50%;
+  background:radial-gradient(circle at 32% 30%, #FFFFFF, #B9CFD6 62%, #7C98A4);
+  box-shadow:0 0 0 1px rgba(0,0,0,.45);
+}
+.sb-cards{ display:flex; align-items:center; gap:7px; margin-left:2px; }
+.sb-cards .cd{
+  display:flex; align-items:center; gap:3px;
+  font-size:11px; font-weight:750; color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+}
+.sb-cards .cd i{ width:7px; height:10px; border-radius:2px; flex:0 0 auto; }
+.sb-cards .cd.y i{ background:#F7C860; }
+.sb-cards .cd.r i{ background:#F41F50; }
+.sb-cards .cd.z{ opacity:.45; }
+@media (max-width:640px){
+  .sb-goals .sg{ font-size:10px; }
+  .scoreboard{ padding:12px 13px; }
+}

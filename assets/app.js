@@ -656,6 +656,28 @@ function pageFootball() {
 }
 
 /* ---------------- PAGE: match ---------------- */
+/* ---- scoreboard incidents --------------------------------
+   "1-0" on its own does not say who scored. These two helpers add
+   the scorers under each team and the card counts beside the clock —
+   scoreboard content, not a tracker widget: no timeline, no stats.
+----------------------------------------------------------- */
+function sbGoals(m, side) {
+  const ev = HB.events[m.id];
+  if (!ev || m.state !== 'live') return '';
+  const list = ev.goals.filter(g => g.s === side);
+  if (!list.length) return '';
+  const sq = side === 'h' ? HB.squad(m.home) : HB.squad(m.away);
+  return `<div class="sb-goals">${list.map(g =>
+    `<span class="sg"><i class="sg-ball"></i>${esc(sq[g.p - 1])} ${g.min}'</span>`).join('')}</div>`;
+}
+function sbCards(m) {
+  const ev = HB.events[m.id];
+  if (!ev || m.state !== 'live') return '';
+  return `<span class="sb-cards" aria-label="${ev.y} yellow, ${ev.r} red cards">
+    <span class="cd y"><i></i>${ev.y}</span><span class="cd r"><i></i>${ev.r}</span>
+  </span>`;
+}
+
 function pageMatch() {
   const m = HB.matches.find(x => x.id === (S.routeParam || 'ars-bha')) || HB.matches[0];
   const h = HB.teams[m.home], a = HB.teams[m.away];
@@ -671,18 +693,18 @@ function pageMatch() {
 
   <div class="scoreboard ${m.state === 'live' ? 'live' : ''}">
     <div class="sb-top">
-      ${m.state === 'live' ? `<i class="cdot"></i><span class="l">LIVE</span><span class="k">${m.clock}</span>` : `<span>${m.kick} · ${m.day}</span>`}
+      ${m.state === 'live' ? `<i class="cdot"></i><span class="l">LIVE</span><span class="k">${m.clock}</span>${sbCards(m)}` : `<span>${m.kick} · ${m.day}</span>`}
       <span class="sp">
         <button class="sbtn ${followed ? 'on' : ''}" data-follow="${m.home}">${followed ? I.starF : I.star} ${followed ? 'Following' : 'Follow'}</button>
       </span>
     </div>
     <div class="sb-score">
-      <div class="sb-team">${crest(m.home, 34)}<span class="nm">${esc(h.name)}</span></div>
+      <div class="sb-team">${crest(m.home, 34)}<div class="sb-tmeta"><span class="nm">${esc(h.name)}</span>${sbGoals(m, 'h')}</div></div>
       <div style="display:flex;align-items:center;gap:10px">
         ${m.state === 'live' ? `<span class="sb-num">${m.hs}</span><span class="sb-dash">-</span><span class="sb-num">${m.as}</span>`
         : `<span style="color:var(--ink-3);font-size:13px">Not started</span>`}
       </div>
-      <div class="sb-team right">${crest(m.away, 34)}<span class="nm">${esc(a.name)}</span></div>
+      <div class="sb-team right">${crest(m.away, 34)}<div class="sb-tmeta"><span class="nm">${esc(a.name)}</span>${sbGoals(m, 'a')}</div></div>
     </div>
   </div>
 
@@ -699,13 +721,26 @@ function pageMatch() {
   <div style="height:26px"></div>`;
 }
 
+/* Outcome and market names are stored with tokens ({home}/{away}/
+   {h1}..{a4}) so one market set serves every fixture. Resolve them
+   against the match being shown. */
+function resolveName(str, m) {
+  if (!str || str.indexOf('{') < 0) return str;
+  const sh = HB.squad(m.home), sa = HB.squad(m.away);
+  return String(str)
+    .replace(/\{home\}/g, HB.teams[m.home].sname)
+    .replace(/\{away\}/g, HB.teams[m.away].sname)
+    .replace(/\{h([1-4])\}/g, (_, i) => sh[+i - 1])
+    .replace(/\{a([1-4])\}/g, (_, i) => sa[+i - 1]);
+}
+
 function marketsHTML(m) {
   const list = HB.markets[S.mktTab] || [];
   return list.map(mk => {
     const susp = mk.suspended || S.suspGroups[mk.id];
     return `<div class="mkt ${susp ? 'susp' : ''}">
       <div class="mh">
-        <span>${esc(mk.name)}</span>
+        <span>${esc(resolveName(mk.name, m))}</span>
         ${susp ? `<span class="tag">${I.lock} Suspended</span>` : ''}
       </div>
       <div class="grid c${mk.cols}${mk.wide ? ' wide' : ''}">
@@ -714,8 +749,8 @@ function marketsHTML(m) {
           const v = S.prices[pk]; const d = S.dir[pk];
           const sel = S.slip.some(b => b.selId === pk);
           return `<button class="o ${sel ? 'sel' : ''} ${d === 'up' ? 'up' : d === 'down' ? 'down' : ''}" data-k="${pk}"
-              data-sel="${o.k}" data-mname="${esc(mk.name)}" data-fix="${m.id}" ${susp ? 'disabled' : ''}>
-              <span class="oname">${esc(o.n)}</span>
+              data-sel="${o.k}" data-mname="${esc(resolveName(mk.name, m))}" data-fix="${m.id}" ${susp ? 'disabled' : ''}>
+              <span class="oname">${esc(resolveName(o.n, m))}</span>
               ${priceInner(pk, v, d)}
             </button>`;
         }).join('')}
@@ -1107,7 +1142,7 @@ function addToSlip(d) {
   const fixtureLabel = `${HB.teams[m.home].name} v ${HB.teams[m.away].name}`;
   if (S.slip.some(b => b.selId === k)) { toast('Already in your slip', 'warn'); return; }
   let name = rawKey;
-  Object.values(HB.markets).forEach(arr => arr.forEach(mk => mk.outs.forEach(o => { if (o.k === rawKey) name = o.n; })));
+  Object.values(HB.markets).forEach(arr => arr.forEach(mk => mk.outs.forEach(o => { if (o.k === rawKey) name = resolveName(o.n, m); })));
   if (rawKey.startsWith('mr-')) name = { 'mr-home': HB.teams[m.home].name, 'mr-draw': 'Draw', 'mr-away': HB.teams[m.away].name }[rawKey] || name;
   S.slip.push({
     uid: 'u' + Math.random().toString(36).slice(2, 8),
