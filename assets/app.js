@@ -708,7 +708,7 @@ function marketsHTML(m) {
         <span>${esc(mk.name)}</span>
         ${susp ? `<span class="tag">${I.lock} Suspended</span>` : ''}
       </div>
-      <div class="grid c${mk.cols}">
+      <div class="grid c${mk.cols}${mk.wide ? ' wide' : ''}">
         ${mk.outs.map(o => {
           const pk = P(m.id, o.k);
           const v = S.prices[pk]; const d = S.dir[pk];

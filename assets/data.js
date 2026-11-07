@@ -168,8 +168,8 @@ HB.marketGroups = [
   { id: 'goals',   label: 'Goals',           n: 8 },
   { id: 'halves',  label: 'Halves',          n: 6 },
   { id: 'hcaps',   label: 'Handicaps',       n: 6 },
-  { id: 'scorers', label: 'Goalscorers',     n: 5 },
-  { id: 'cards',   label: 'Corners & cards', n: 6 }
+  { id: 'scorers', label: 'Goalscorers',     n: 9 },
+  { id: 'cards',   label: 'Corners & cards', n: 9 }
 ];
 
 /* Markets rendered per group.
@@ -245,19 +245,27 @@ HB.markets = {
       outs: [{ k: 'ahp1-h', n: 'Arsenal +1', v: 1.10 }, { k: 'ahp1-a', n: 'Brighton -1', v: 7.00 }] }
   ],
   scorers: [
-    { id: 'fgs', name: 'First goalscorer', cols: 3, suspended: false,
+    { id: 'fgs', name: 'First goalscorer', cols: 3, wide: true, suspended: false,
       outs: [{ k: 'fgs-1', n: 'T. Reyes', v: 5.50 }, { k: 'fgs-2', n: 'M. Okonkwo', v: 7.00 }, { k: 'fgs-3', n: 'L. Vazquez', v: 9.50 }] },
-    { id: 'ags', name: 'Anytime goalscorer', cols: 3, suspended: false,
+    { id: 'ags', name: 'Anytime goalscorer', cols: 3, wide: true, suspended: false,
       outs: [{ k: 'ags-1', n: 'T. Reyes', v: 2.10 }, { k: 'ags-2', n: 'M. Okonkwo', v: 2.75 }, { k: 'ags-3', n: 'D. Halvorsen', v: 3.40 }] },
-    { id: 'lgs', name: 'Last goalscorer', cols: 3, suspended: true,
+    { id: 'lgs', name: 'Last goalscorer', cols: 3, wide: true, suspended: true,
       outs: [{ k: 'lgs-1', n: 'S. Amankwah', v: 6.00 }, { k: 'lgs-2', n: 'J. Whitlock', v: 8.00 }, { k: 'lgs-3', n: 'L. Vazquez', v: 10.00 }] },
-    { id: 'g2p', name: 'To score 2 or more', cols: 3, suspended: false,
+    { id: 'g2p', name: 'To score 2 or more', cols: 3, wide: true, suspended: false,
       outs: [{ k: 'g2p-1', n: 'T. Reyes', v: 12.00 }, { k: 'g2p-2', n: 'M. Okonkwo', v: 17.00 }, { k: 'g2p-3', n: 'J. Whitlock', v: 21.00 }] },
-    { id: 'hat', name: 'To score a hat-trick', cols: 3, suspended: false,
-      outs: [{ k: 'hat-1', n: 'T. Reyes', v: 51.00 }, { k: 'hat-2', n: 'M. Okonkwo', v: 67.00 }, { k: 'hat-3', n: 'S. Amankwah', v: 81.00 }] }
+    { id: 'hat', name: 'To score a hat-trick', cols: 3, wide: true, suspended: false,
+      outs: [{ k: 'hat-1', n: 'T. Reyes', v: 51.00 }, { k: 'hat-2', n: 'M. Okonkwo', v: 67.00 }, { k: 'hat-3', n: 'S. Amankwah', v: 81.00 }] },
+    { id: 'agsh', name: 'Arsenal anytime scorer', cols: 3, wide: true, suspended: false,
+      outs: [{ k: 'agsh-1', n: 'T. Reyes', v: 2.40 }, { k: 'agsh-2', n: 'M. Okonkwo', v: 3.10 }, { k: 'agsh-3', n: 'D. Halvorsen', v: 3.80 }] },
+    { id: 'agsa', name: 'Brighton anytime scorer', cols: 3, wide: true, suspended: false,
+      outs: [{ k: 'agsa-1', n: 'L. Vazquez', v: 3.60 }, { k: 'agsa-2', n: 'S. Amankwah', v: 4.40 }, { k: 'agsa-3', n: 'J. Whitlock', v: 5.20 }] },
+    { id: 'sbh', name: 'Score in both halves', cols: 2, suspended: false,
+      outs: [{ k: 'sbh-y', n: 'Yes', v: 2.60 }, { k: 'sbh-n', n: 'No', v: 1.48 }] },
+    { id: 'ftgs', name: 'First team goalscorer', cols: 3, wide: true, suspended: false,
+      outs: [{ k: 'ftgs-h', n: 'Arsenal', v: 1.44 }, { k: 'ftgs-a', n: 'Brighton', v: 3.10 }, { k: 'ftgs-n', n: 'No goalscorer', v: 12.00 }] }
   ],
   cards: [
-    { id: 'corn', name: 'Total corners', cols: 3, suspended: false,
+    { id: 'corn', name: 'Total corners', cols: 3, wide: true, suspended: false,
       outs: [{ k: 'corn-o95', n: 'Over 9.5', v: 1.85 }, { k: 'corn-u95', n: 'Under 9.5', v: 1.95 }, { k: 'corn-o115', n: 'Over 11.5', v: 3.10 }] },
     { id: 'crt',  name: 'Total cards', cols: 2, suspended: false,
       outs: [{ k: 'crt-o35', n: 'Over 3.5', v: 1.90 }, { k: 'crt-u35', n: 'Under 3.5', v: 1.90 }] },
@@ -268,7 +276,13 @@ HB.markets = {
     { id: 'corn1h', name: '1st half total corners', cols: 2, suspended: false,
       outs: [{ k: 'corn1h-o', n: 'Over 4.5', v: 1.95 }, { k: 'corn1h-u', n: 'Under 4.5', v: 1.85 }] },
     { id: 'cardh', name: 'Card handicap', cols: 2, suspended: false,
-      outs: [{ k: 'cardh-h', n: 'Arsenal -0.5', v: 1.98 }, { k: 'cardh-a', n: 'Brighton +0.5', v: 1.82 }] }
+      outs: [{ k: 'cardh-h', n: 'Arsenal -0.5', v: 1.98 }, { k: 'cardh-a', n: 'Brighton +0.5', v: 1.82 }] },
+    { id: 'rc', name: 'Red card in match', cols: 2, suspended: false,
+      outs: [{ k: 'rc-y', n: 'Yes', v: 6.50 }, { k: 'rc-n', n: 'No', v: 1.10 }] },
+    { id: 'ptc', name: 'Player to be carded', cols: 3, wide: true, suspended: false,
+      outs: [{ k: 'ptc-1', n: 'T. Reyes', v: 3.40 }, { k: 'ptc-2', n: 'M. Okonkwo', v: 4.20 }, { k: 'ptc-3', n: 'L. Vazquez', v: 4.80 }] },
+    { id: 'crt45', name: 'Total cards O/U 4.5', cols: 2, suspended: false,
+      outs: [{ k: 'crt45-o', n: 'Over 4.5', v: 3.20 }, { k: 'crt45-u', n: 'Under 4.5', v: 1.34 }] }
   ]
 };
 

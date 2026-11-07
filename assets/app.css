@@ -1213,3 +1213,15 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 @media (max-width:640px){
   .sitefoot{ margin:22px 12px 18px; }
 }
+
+/* Tiles holding player names or long price labels need more
+   on a phone they drop to two columns so names are not clipped. */
+@media (max-width:640px){
+  .grid.c3.wide{ grid-template-columns:repeat(2,1fr); }
+  .grid.wide .o .oname{ font-size:12px; }
+  /* rather than clip a market name, let it wrap — every tile in the
+     row stretches to the same height, so the grid stays even */
+  .grid .o .oname{
+    white-space:normal; overflow:visible; text-overflow:clip; line-height:1.25;
+  }
+}
