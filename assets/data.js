@@ -126,27 +126,43 @@ HB.sports = [
 
 /* ---------- market groups (match page) ----------
    Six groups exactly as the brief requires.
+   `n` = number of markets in the group (shown on the tab badge,
+   and it matches exactly how many are rendered).
 ------------------------------------------------- */
 HB.marketGroups = [
-  { id: 'popular', label: 'Popular',   n: 10 },
-  { id: 'goals',   label: 'Goals',     n: 22 },
-  { id: 'halves',  label: 'Halves',    n: 14 },
-  { id: 'hcaps',   label: 'Handicaps', n: 18 },
-  { id: 'scorers', label: 'Goalscorers', n: 12 },
-  { id: 'cards',   label: 'Corners & cards', n: 16 }
+  { id: 'popular', label: 'Popular',         n: 10 },
+  { id: 'goals',   label: 'Goals',           n: 8 },
+  { id: 'halves',  label: 'Halves',          n: 6 },
+  { id: 'hcaps',   label: 'Handicaps',       n: 6 },
+  { id: 'scorers', label: 'Goalscorers',     n: 5 },
+  { id: 'cards',   label: 'Corners & cards', n: 6 }
 ];
 
-/* Markets rendered per group. `n` = how many extra rows the "+N >" chip shows. */
+/* Markets rendered per group.
+   Every `k` must be unique across the whole object — the price
+   engine namespaces by `fixtureId:outcomeKey`. */
 HB.markets = {
   popular: [
     { id: 'mr',    name: 'Match result', cols: 3, suspended: false,
       outs: [{ k: 'mr-home', n: 'Arsenal', v: 1.30 }, { k: 'mr-draw', n: 'Draw', v: 4.60 }, { k: 'mr-away', n: 'Brighton', v: 11.00 }] },
     { id: 'dc',    name: 'Double chance', cols: 3, suspended: false,
-      outs: [{ k: 'dc-hd', n: 'Arsenal/Draw', v: 1.03 }, { k: 'dc-ha', n: 'Arsenal/Brighton', v: 1.18 }, { k: 'dc-da', n: 'Draw/Brighton', v: 3.30 }] },
+      outs: [{ k: 'dc-hd', n: 'Arsenal/Draw', v: 1.01 }, { k: 'dc-ha', n: 'Arsenal/Brighton', v: 1.16 }, { k: 'dc-da', n: 'Draw/Brighton', v: 3.24 }] },
     { id: 'btts',  name: 'Both teams to score', cols: 2, suspended: false,
       outs: [{ k: 'btts-y', n: 'Yes', v: 1.72 }, { k: 'btts-n', n: 'No', v: 2.05 }] },
     { id: 'tg',    name: 'Total goals', cols: 3, suspended: false,
-      outs: [{ k: 'tg-o25', n: 'Over 2.5', v: 1.57 }, { k: 'tg-u25', n: 'Under 2.5', v: 2.30 }, { k: 'tg-o35', n: 'Over 3.5', v: 2.65 }] }
+      outs: [{ k: 'tg-o25', n: 'Over 2.5', v: 1.57 }, { k: 'tg-u25', n: 'Under 2.5', v: 2.30 }, { k: 'tg-o35', n: 'Over 3.5', v: 2.65 }] },
+    { id: 'dnbt',  name: 'Draw no bet', cols: 2, suspended: false,
+      outs: [{ k: 'dnbt-h', n: 'Arsenal', v: 1.14 }, { k: 'dnbt-a', n: 'Brighton', v: 7.50 }] },
+    { id: 'tg35',  name: 'Over/Under 3.5 goals', cols: 2, suspended: false,
+      outs: [{ k: 'tg35-o', n: 'Over 3.5', v: 2.65 }, { k: 'tg35-u', n: 'Under 3.5', v: 1.44 }] },
+    { id: 'ah05',  name: 'Asian handicap -0.5', cols: 2, suspended: false,
+      outs: [{ k: 'ah05-h', n: 'Arsenal -0.5', v: 1.30 }, { k: 'ah05-a', n: 'Brighton +0.5', v: 3.30 }] },
+    { id: 'htft',  name: 'Half-time / Full-time', cols: 3, suspended: false,
+      outs: [{ k: 'htft-hh', n: 'Arsenal / Arsenal', v: 1.85 }, { k: 'htft-hd', n: 'Arsenal / Draw', v: 13.00 }, { k: 'htft-dh', n: 'Draw / Arsenal', v: 4.20 }] },
+    { id: 'cs',    name: 'Correct score', cols: 3, suspended: false,
+      outs: [{ k: 'cs-10', n: '1-0', v: 5.50 }, { k: 'cs-20', n: '2-0', v: 6.50 }, { k: 'cs-21', n: '2-1', v: 8.50 }] },
+    { id: 'tgoe',  name: 'Total goals odd/even', cols: 2, suspended: false,
+      outs: [{ k: 'tgoe-o', n: 'Odd', v: 1.90 }, { k: 'tgoe-e', n: 'Even', v: 1.90 }] }
   ],
   goals: [
     { id: 'o15',  name: 'Over/Under 1.5 goals', cols: 2, suspended: false,
@@ -156,7 +172,15 @@ HB.markets = {
     { id: 'nxg',  name: 'Next goal', cols: 3, suspended: false,
       outs: [{ k: 'nxg-h', n: 'Arsenal', v: 1.66 }, { k: 'nxg-n', n: 'No goal', v: 13.00 }, { k: 'nxg-a', n: 'Brighton', v: 2.90 }] },
     { id: 'rts',  name: 'Team to score', cols: 2, suspended: true,
-      outs: [{ k: 'rts-h', n: 'Arsenal', v: 1.11 }, { k: 'rts-a', n: 'Brighton', v: 2.40 }] }
+      outs: [{ k: 'rts-h', n: 'Arsenal', v: 1.11 }, { k: 'rts-a', n: 'Brighton', v: 2.40 }] },
+    { id: 'o05',  name: 'Over/Under 0.5 goals', cols: 2, suspended: false,
+      outs: [{ k: 'o05-o', n: 'Over 0.5', v: 1.05 }, { k: 'o05-u', n: 'Under 0.5', v: 9.00 }] },
+    { id: 'o55',  name: 'Over/Under 5.5 goals', cols: 2, suspended: false,
+      outs: [{ k: 'o55-o', n: 'Over 5.5', v: 9.50 }, { k: 'o55-u', n: 'Under 5.5', v: 1.04 }] },
+    { id: 'ttg',  name: 'Arsenal total goals', cols: 2, suspended: false,
+      outs: [{ k: 'ttg-o', n: 'Over 1.5', v: 1.95 }, { k: 'ttg-u', n: 'Under 1.5', v: 1.85 }] },
+    { id: 'wm',   name: 'Winning margin', cols: 3, suspended: false,
+      outs: [{ k: 'wm-1', n: 'Arsenal by 1', v: 3.40 }, { k: 'wm-2', n: 'Arsenal by 2+', v: 3.10 }, { k: 'wm-a', n: 'Brighton', v: 9.50 }] }
   ],
   halves: [
     { id: 'h1',  name: '1st half result', cols: 3, suspended: false,
@@ -164,7 +188,13 @@ HB.markets = {
     { id: 'h2',  name: '2nd half result', cols: 3, suspended: false,
       outs: [{ k: 'h2-h', n: 'Arsenal', v: 1.90 }, { k: 'h2-d', n: 'Draw', v: 2.75 }, { k: 'h2-a', n: 'Brighton', v: 6.00 }] },
     { id: 'hhc', name: 'Half handicap', cols: 2, suspended: false,
-      outs: [{ k: 'hhc-h', n: 'Arsenal -0.5', v: 1.68 }, { k: 'hhc-a', n: 'Brighton +0.5', v: 2.15 }] }
+      outs: [{ k: 'hhc-h', n: 'Arsenal -0.5', v: 1.68 }, { k: 'hhc-a', n: 'Brighton +0.5', v: 2.15 }] },
+    { id: 'h1tg', name: '1st half total goals', cols: 2, suspended: false,
+      outs: [{ k: 'h1tg-o', n: 'Over 1.5', v: 2.60 }, { k: 'h1tg-u', n: 'Under 1.5', v: 1.48 }] },
+    { id: 'h1btts', name: '1st half both teams to score', cols: 2, suspended: false,
+      outs: [{ k: 'h1btts-y', n: 'Yes', v: 4.20 }, { k: 'h1btts-n', n: 'No', v: 1.20 }] },
+    { id: 'hsh', name: 'Highest scoring half', cols: 3, suspended: false,
+      outs: [{ k: 'hsh-1', n: '1st half', v: 3.10 }, { k: 'hsh-2', n: '2nd half', v: 1.95 }, { k: 'hsh-t', n: 'Tie', v: 3.60 }] }
   ],
   hcaps: [
     { id: 'ah1', name: 'Asian handicap -1', cols: 2, suspended: false,
@@ -172,7 +202,13 @@ HB.markets = {
     { id: 'ah2', name: 'Asian handicap -1.5', cols: 2, suspended: false,
       outs: [{ k: 'ah2-h', n: 'Arsenal -1.5', v: 2.38 }, { k: 'ah2-a', n: 'Brighton +1.5', v: 1.60 }] },
     { id: 'eh',  name: 'European handicap', cols: 3, suspended: true,
-      outs: [{ k: 'eh-h', n: 'Arsenal -2', v: 4.20 }, { k: 'eh-d', n: 'Draw', v: 4.10 }, { k: 'eh-a', n: 'Brighton +2', v: 1.72 }] }
+      outs: [{ k: 'eh-h', n: 'Arsenal -2', v: 4.20 }, { k: 'eh-d', n: 'Draw', v: 4.10 }, { k: 'eh-a', n: 'Brighton +2', v: 1.72 }] },
+    { id: 'ah3', name: 'Asian handicap -2', cols: 2, suspended: false,
+      outs: [{ k: 'ah3-h', n: 'Arsenal -2', v: 3.60 }, { k: 'ah3-a', n: 'Brighton +2', v: 1.30 }] },
+    { id: 'ah25', name: 'Asian handicap -2.5', cols: 2, suspended: false,
+      outs: [{ k: 'ah25-h', n: 'Arsenal -2.5', v: 4.40 }, { k: 'ah25-a', n: 'Brighton +2.5', v: 1.22 }] },
+    { id: 'ahp1', name: 'Asian handicap +1', cols: 2, suspended: false,
+      outs: [{ k: 'ahp1-h', n: 'Arsenal +1', v: 1.10 }, { k: 'ahp1-a', n: 'Brighton -1', v: 7.00 }] }
   ],
   scorers: [
     { id: 'fgs', name: 'First goalscorer', cols: 3, suspended: false,
@@ -180,7 +216,11 @@ HB.markets = {
     { id: 'ags', name: 'Anytime goalscorer', cols: 3, suspended: false,
       outs: [{ k: 'ags-1', n: 'T. Reyes', v: 2.10 }, { k: 'ags-2', n: 'M. Okonkwo', v: 2.75 }, { k: 'ags-3', n: 'D. Halvorsen', v: 3.40 }] },
     { id: 'lgs', name: 'Last goalscorer', cols: 3, suspended: true,
-      outs: [{ k: 'lgs-1', n: 'S. Amankwah', v: 6.00 }, { k: 'lgs-2', n: 'J. Whitlock', v: 8.00 }, { k: 'lgs-3', n: 'L. Vazquez', v: 10.00 }] }
+      outs: [{ k: 'lgs-1', n: 'S. Amankwah', v: 6.00 }, { k: 'lgs-2', n: 'J. Whitlock', v: 8.00 }, { k: 'lgs-3', n: 'L. Vazquez', v: 10.00 }] },
+    { id: 'g2p', name: 'To score 2 or more', cols: 3, suspended: false,
+      outs: [{ k: 'g2p-1', n: 'T. Reyes', v: 12.00 }, { k: 'g2p-2', n: 'M. Okonkwo', v: 17.00 }, { k: 'g2p-3', n: 'J. Whitlock', v: 21.00 }] },
+    { id: 'hat', name: 'To score a hat-trick', cols: 3, suspended: false,
+      outs: [{ k: 'hat-1', n: 'T. Reyes', v: 51.00 }, { k: 'hat-2', n: 'M. Okonkwo', v: 67.00 }, { k: 'hat-3', n: 'S. Amankwah', v: 81.00 }] }
   ],
   cards: [
     { id: 'corn', name: 'Total corners', cols: 3, suspended: false,
@@ -188,7 +228,13 @@ HB.markets = {
     { id: 'crt',  name: 'Total cards', cols: 2, suspended: false,
       outs: [{ k: 'crt-o35', n: 'Over 3.5', v: 1.90 }, { k: 'crt-u35', n: 'Under 3.5', v: 1.90 }] },
     { id: 'first',name: 'First card', cols: 2, suspended: true,
-      outs: [{ k: 'first-h', n: 'Arsenal', v: 2.05 }, { k: 'first-a', n: 'Brighton', v: 1.75 }] }
+      outs: [{ k: 'first-h', n: 'Arsenal', v: 2.05 }, { k: 'first-a', n: 'Brighton', v: 1.75 }] },
+    { id: 'cornh', name: 'Corner handicap', cols: 2, suspended: false,
+      outs: [{ k: 'cornh-h', n: 'Arsenal -1.5', v: 2.20 }, { k: 'cornh-a', n: 'Brighton +1.5', v: 1.70 }] },
+    { id: 'corn1h', name: '1st half total corners', cols: 2, suspended: false,
+      outs: [{ k: 'corn1h-o', n: 'Over 4.5', v: 1.95 }, { k: 'corn1h-u', n: 'Under 4.5', v: 1.85 }] },
+    { id: 'cardh', name: 'Card handicap', cols: 2, suspended: false,
+      outs: [{ k: 'cardh-h', n: 'Arsenal -0.5', v: 1.98 }, { k: 'cardh-a', n: 'Brighton +0.5', v: 1.82 }] }
   ]
 };
 
