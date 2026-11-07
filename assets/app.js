@@ -64,6 +64,7 @@ const S = {
   mktTab: 'popular',
   liveFilter: 'all',
   liveComp: 'all',
+  liveSort: 'time',
   footComp: 'all',
   noLive: false,       // lab: nothing live
   paused: false,       // lab: freeze the live odds engine
@@ -353,17 +354,32 @@ function pageLive() {
   let shown = S.liveFilter === 'all' ? compIds : compIds.filter(c => c === 'pl' || c === 'liga' || c === 'seria');
   if (S.liveComp !== 'all') shown = shown.filter(c => c === S.liveComp);
 
+  const cname = id => (HB.comps.find(x => x.id === id) || {}).name || id;
+  if (S.liveSort === 'comp') {
+    shown.sort((a, b) => cname(a).localeCompare(cname(b)));
+    shown.forEach(cid => groups[cid].sort((a, b) => a.minute - b.minute));
+  } else {
+    // most advanced minute first — the matches closest to finishing lead
+    shown.forEach(cid => groups[cid].sort((a, b) => b.minute - a.minute));
+    shown.sort((a, b) => Math.max(...groups[b].map(m => m.minute)) - Math.max(...groups[a].map(m => m.minute)));
+  }
+
   return `
   <div class="phead"><button class="back" data-go="home">${I.back}</button><h1>Live now</h1></div>
   ${searchHTML()}
   <div class="filters">
-    ${[['all', 'All', 13], ['soccer', 'Soccer', 6], ['tennis', 'Tennis', 3], ['basket', 'Basketball', 4]]
-      .map(([id, l, n]) => `<button class="fpill ${S.liveFilter === id ? 'on' : ''}" data-livef="${id}">${l}<span class="n">${n}</span></button>`).join('')}
+    ${[['all', 'All', live.length], ['soccer', 'Soccer', live.length], ['tennis', 'Tennis', 0], ['basket', 'Basketball', 0]]
+      .map(([id, l, n]) => `<button class="fpill ${S.liveFilter === id ? 'on' : ''}" data-livef="${id}">${l}${n ? `<span class="n">${n}</span>` : ''}</button>`).join('')}
   </div>
   <div class="filters" style="padding-top:0">
     <span class="flabel">Competition</span>
     ${[['all', 'All competitions'], ...HB.comps.map(c => [c.id, c.name])]
       .map(([id, l]) => `<button class="fpill sm ${S.liveComp === id ? 'on' : ''}" data-livec="${id}">${esc(l)}</button>`).join('')}
+  </div>
+  <div class="filters" style="padding-top:0">
+    <span class="flabel">Sort</span>
+    ${[['time', 'Time'], ['comp', 'Competition']]
+      .map(([id, l]) => `<button class="fpill sm ${S.liveSort === id ? 'on' : ''}" data-livesort="${id}">${l}</button>`).join('')}
   </div>
   ${shown.length === 0 ? emptyHTML('Nothing live right now', 'Nothing live: showing Starting soon instead of a blank page.', true) : ''}
   ${shown.map(cid => {
@@ -796,6 +812,7 @@ function bindPage() {
   $$('[data-livef]').forEach(b => b.onclick = () => { S.liveFilter = b.dataset.livef; renderShell(); });
   $$('[data-footc]').forEach(b => b.onclick = () => { S.footComp = b.dataset.footc; renderShell(); });
   $$('[data-livec]').forEach(b => b.onclick = () => { S.liveComp = b.dataset.livec; renderShell(); });
+  $$('[data-livesort]').forEach(b => b.onclick = () => { S.liveSort = b.dataset.livesort; renderShell(); });
   $$('[data-footgo]').forEach(b => b.onclick = () => { S.footComp = b.dataset.footgo; go('football'); });
   $$('[data-open-match]').forEach(b => b.onclick = e => { e.stopPropagation(); go('match/' + b.dataset.openMatch); });
   $$('[data-follow]').forEach(b => b.onclick = e => {

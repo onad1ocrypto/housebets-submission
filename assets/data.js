@@ -81,16 +81,16 @@ HB.matches = [
     odds: { 'mr-home': 2.20, 'mr-draw': 3.70, 'mr-away': 2.90 }
   },
   {
-    id: 'mci-tot', comp: 'pl', state: 'pre', clock: '', minute: 0,
-    home: 'MCI', away: 'TOT', hs: null, as: null,
-    kick: '14:00', day: 'Sun, Oct 18', marketsCount: 132,
-    odds: { 'mr-home': 1.50, 'mr-draw': 4.50, 'mr-away': 5.25 }
+    id: 'mci-tot', comp: 'pl', state: 'live', clock: "51'", minute: 51,
+    home: 'MCI', away: 'TOT', hs: 2, as: 0,
+    kick: 'LIVE', day: '', marketsCount: 132,
+    odds: { 'mr-home': 1.18, 'mr-draw': 7.50, 'mr-away': 15.00 }
   },
   {
-    id: 'nap-mil', comp: 'seria', state: 'soon', clock: '', minute: 0,
-    home: 'NAP', away: 'MIL', hs: null, as: null,
-    kick: '18:45', day: 'Sun, Oct 18', marketsCount: 74,
-    odds: { 'mr-home': 2.05, 'mr-draw': 3.40, 'mr-away': 3.60 }
+    id: 'nap-mil', comp: 'seria', state: 'live', clock: "74'", minute: 74,
+    home: 'NAP', away: 'MIL', hs: 1, as: 1,
+    kick: 'LIVE', day: '', marketsCount: 74,
+    odds: { 'mr-home': 2.60, 'mr-draw': 3.10, 'mr-away': 2.90 }
   },
   {
     id: 'bvb-che', comp: 'bund', state: 'pre', clock: '', minute: 0,
@@ -109,6 +109,24 @@ HB.matches = [
     home: 'SEV', away: 'RMA', hs: null, as: null,
     kick: '21:00', day: 'Mon, Oct 19', marketsCount: 103,
     odds: { 'mr-home': 4.10, 'mr-draw': 3.90, 'mr-away': 1.80 }
+  },
+  {
+    id: 'che-liv', comp: 'pl', state: 'live', clock: "34'", minute: 34,
+    home: 'CHE', away: 'LIV', hs: 0, as: 1,
+    kick: 'LIVE', day: '', marketsCount: 168,
+    odds: { 'mr-home': 4.20, 'mr-draw': 3.60, 'mr-away': 1.85 }
+  },
+  {
+    id: 'int-nap', comp: 'seria', state: 'live', clock: "68'", minute: 68,
+    home: 'INT', away: 'NAP', hs: 2, as: 1,
+    kick: 'LIVE', day: '', marketsCount: 141,
+    odds: { 'mr-home': 1.44, 'mr-draw': 4.50, 'mr-away': 7.00 }
+  },
+  {
+    id: 'bay-sev', comp: 'ucl', state: 'live', clock: "12'", minute: 12,
+    home: 'BAY', away: 'SEV', hs: 0, as: 0,
+    kick: 'LIVE', day: '', marketsCount: 122,
+    odds: { 'mr-home': 1.55, 'mr-draw': 4.10, 'mr-away': 6.00 }
   }
 ];
 
