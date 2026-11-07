@@ -624,6 +624,7 @@ function renderPanel() {
   if (S.route === 'bets') { p.style.display = 'none'; return; }
   if (window.innerWidth <= 980) { p.style.display = 'none'; return; }
   p.style.display = '';
+  p.classList.toggle('has-bets', S.slip.length > 0);
   p.innerHTML = `
     <div class="sliptabs">
       <button class="sliptab ${S.myBetsTab === 'slip' ? 'on' : ''}" data-mbt="slip">Bet slip${S.slip.length ? `<span class="n">${S.slip.length}</span>` : ''}</button>
@@ -968,10 +969,45 @@ const LAB = [
   ['empty', 'Empty slip state', '#6B8794']
 ];
 
+
+/* ---- wordmark shimmer -------------------------------------
+   A highlight sweeps across the official logo. It only adds
+   white light over the existing paths — no hue is changed,
+   and the wave keeps its own cyan.
+------------------------------------------------------------ */
+function shimmerLogo(svg){
+  if (!svg || svg.dataset.shim) return;
+  const paths = [...svg.querySelectorAll('path')].map(p => p.outerHTML).join('');
+  if (!paths) return;
+  const vb = (svg.getAttribute('viewBox') || '0 0 116 18').split(/\s+/).map(Number);
+  const W = vb[2] || 116, H = vb[3] || 18;
+  const slow = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  svg.insertAdjacentHTML('afterbegin',
+    `<defs>
+      <g id="hbP">${paths}</g>
+      <mask id="hbM" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><use href="#hbP"/></mask>
+      <linearGradient id="hbS" gradientUnits="userSpaceOnUse" x1="${-W * 0.55}" y1="0" x2="0" y2="${H}">
+        <stop offset="0"   stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.92"/>
+        <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
+        ${slow ? '' : `<animateTransform attributeName="gradientTransform" type="translate"
+            from="0 0" to="${W * 2.2} 0" dur="4.6s" repeatCount="indefinite"/>`}
+      </linearGradient>
+    </defs>`);
+  [...svg.querySelectorAll(':scope > path')].forEach(p => p.remove());
+  svg.insertAdjacentHTML('beforeend',
+    `<use href="#hbP"/><rect x="0" y="0" width="${W}" height="${H}" fill="url(#hbS)" mask="url(#hbM)"/>`);
+  svg.dataset.shim = '1';
+}
+
 /* ---------------- boot ---------------- */
 function boot() {
-  const th = new URLSearchParams(location.search).get('theme') || 'c';
+  const qs = new URLSearchParams(location.search);
+  const th = qs.get('theme') || 'c';
   if (th !== 'off') document.body.classList.add('theme-' + th);
+  const bg = qs.get('bg');
+  if (bg) document.body.classList.add('bg-' + bg);
   document.body.innerHTML = `
     <div class="app">
     ${topbarHTML()}
@@ -1014,6 +1050,7 @@ function boot() {
     </div>
   `;
 
+  shimmerLogo($('.brand .wm'));
   renderLab();
   $('#labFab').onclick = () => $('#labMenu').classList.toggle('open');
   $$('[data-lab]').forEach(b => b.onclick = () => { labAction(b.dataset.lab); $('#labMenu').classList.remove('open'); });
