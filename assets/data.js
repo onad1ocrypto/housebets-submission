@@ -203,7 +203,10 @@ HB.markets = {
       outs: [{ k: 'tg35-o', n: 'Over 3.5', v: 2.65 }, { k: 'tg35-u', n: 'Under 3.5', v: 1.44 }] },
     { id: 'ah05',  name: 'Asian handicap -0.5', cols: 2, suspended: false,
       outs: [{ k: 'ah05-h', n: '{home} -0.5', v: 1.30 }, { k: 'ah05-a', n: '{away} +0.5', v: 3.30 }] },
-    { id: 'htft',  name: 'Half-time / Full-time', cols: 3, suspended: false,
+    /* Suspended in-play on purpose: half-time is already decided, so this
+       is the one market a real book closes. It sits in Popular so the
+       suspended state is visible on the tab the judge lands on. */
+    { id: 'htft',  name: 'Half-time / Full-time', cols: 3, suspended: true,
       outs: [{ k: 'htft-hh', n: '{home} / {home}', v: 1.85 }, { k: 'htft-hd', n: '{home} / Draw', v: 13.00 }, { k: 'htft-dh', n: 'Draw / {home}', v: 4.20 }] },
     { id: 'cs',    name: 'Correct score', cols: 3, suspended: false,
       outs: [{ k: 'cs-10', n: '1-0', v: 5.50 }, { k: 'cs-20', n: '2-0', v: 6.50 }, { k: 'cs-21', n: '2-1', v: 8.50 }] },

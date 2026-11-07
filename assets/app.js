@@ -158,14 +158,17 @@ setInterval(() => {
     if (m.state === 'live' && !S.noLive && m.minute < 90) m.minute++;
     if (m.state === 'live') m.clock = m.minute + "'";
   });
+  // Clear stale direction markers BEFORE drifting, not after. Drift sets
+  // the direction then renders; clearing it in the same tick wiped the
+  // arrow before it could ever be painted, so the up/down indicator on a
+  // moving price was invisible. The marker now lives for one tick.
+  Object.keys(S.dir).forEach(k => { if (S.dir[k]) S.dir[k] = null; });
   // price drift every 4 ticks
   if (tick % 4 === 0) {
     const keys = Object.keys(S.prices).filter(k => !k.includes(':dc-'));
     const k = keys[Math.floor(Math.random() * keys.length)];
     if (k) drift(k, (Math.random() * 0.16) - 0.08);
   }
-  // clear direction markers
-  Object.keys(S.dir).forEach(k => { if (S.dir[k]) S.dir[k] = null; });
   if (S.route === 'match') renderMarketsLive();
   if (!S.noLive) renderLiveClocks();
 }, 2600);
@@ -1193,7 +1196,15 @@ function addToSlip(d) {
   const m = HB.matches.find(x => x.id === fixId) || HB.matches[0];
   const k = P(m.id, rawKey);
   const fixtureLabel = `${HB.teams[m.home].name} v ${HB.teams[m.away].name}`;
-  if (S.slip.some(b => b.selId === k)) { toast('Already in your slip', 'warn'); return; }
+  if (S.slip.some(x => x.selId === k)) { toast('Already in your slip', 'warn'); return; }
+  /* Singles only. The brief lists multis/accumulators as out of scope and
+     says adding one reads as not having read the brief, so a new pick
+     replaces the one already in the slip instead of joining it. */
+  if (S.slip.length) {
+    const gone = S.slip[0];
+    S.slip = [];
+    toast(`Singles only — replaced ${gone.selName}`, 'warn');
+  }
   let name = rawKey;
   Object.values(HB.markets).forEach(arr => arr.forEach(mk => mk.outs.forEach(o => { if (o.k === rawKey) name = resolveName(o.n, m); })));
   if (rawKey.startsWith('mr-')) name = { 'mr-home': HB.teams[m.home].name, 'mr-draw': 'Draw', 'mr-away': HB.teams[m.away].name }[rawKey] || name;

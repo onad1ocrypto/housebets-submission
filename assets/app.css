@@ -386,7 +386,10 @@ body.route-bets .main::after{
 }
 .mcard .head .clive{ color:var(--live-tx); font-weight:700; display:flex; align-items:center; gap:5px; }
 .mcard .head .cdot{ width:5px;height:5px;border-radius:50%;background:var(--live); }
-.mcard .head .clock{ color:var(--aqua); font-weight:650; }
+/* The brief keeps the cyan accent for prices and primary actions only, so
+   the live minute wears the LIVE colour instead - it sits right beside
+   the LIVE badge and reads as one signal. */
+.mcard .head .clock{ color:var(--live-tx); font-weight:650; }
 .mcard .head .spacer{ margin-left:auto; }
 .mcard .head .mkt{ color:var(--ink-3); display:flex; align-items:center; gap:4px; }
 .mcard .head .mkt:hover{ color:var(--aqua); }
@@ -578,7 +581,7 @@ body.route-bets .main::after{
 .sb-top{ display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:11px; color:var(--ink-3); }
 .sb-top .cdot{ width:5px;height:5px;border-radius:50%;background:var(--live); }
 .sb-top .l{ color:var(--live-tx); font-weight:700; }
-.sb-top .k{ color:var(--aqua); font-weight:650; }
+.sb-top .k{ color:var(--live-tx); font-weight:650; }
 .sb-top .sp{ margin-left:auto; display:flex; align-items:center; gap:7px; }
 .sbtn{
   display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px;
