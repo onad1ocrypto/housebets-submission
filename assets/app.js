@@ -105,6 +105,7 @@ const S = {
   compFollows: { pl: true },
   favs: [{ kind: 'comp', id: 'pl' }, { kind: 'team', id: 'ARS' }],
   prices: {},          // key -> current price
+  prev: {},            // key -> price before the last move (the "was")
   dir: {},             // key -> 'up' | 'down' | null
   suspGroups: {},      // groupId -> true (forced by lab)
   mktTab: 'popular',
@@ -115,6 +116,7 @@ const S = {
   noLive: false,       // lab: nothing live
   paused: false,       // lab: freeze the live odds engine
   nextFail: false,     // lab: force place-bet failure
+  failMsg: null,       // persistent reason shown in the slip until cleared
   myBetsTab: 'slip',
   sheetOpen: false,
   lastPlaced: null
@@ -174,6 +176,9 @@ function drift(key, delta) {
   const nw = Math.max(1.02, Math.min(24, old + delta));
   S.prices[key] = Math.round(nw * 100) / 100;
   S.dir[key] = nw > old ? 'up' : (nw < old ? 'down' : null);
+  // remember what it was, so the tile can say "was 1.30" — the arrow
+  // tells you something moved, the old price tells you what from.
+  if (Math.abs(S.prices[key] - old) > 0.001) S.prev[key] = old;
   // if it's in the slip and differs from the accepted odds -> requires accept
   S.slip.forEach(b => {
     if (b.selId === key && Math.abs(S.prices[key] - b.odds) > 0.001 && !b.suspended) {
@@ -213,8 +218,29 @@ function route() {
 }
 
 /* ---------------- shell render ---------------- */
+/* ---------------- footer ----------------
+   Small brand trace the brief asks for: 18+, a responsible-gambling
+   line, and a plain reminder that none of this is real money.
+----------------------------------------- */
+function footerHTML() {
+  return `
+  <footer class="sitefoot">
+    <div class="sf-row">
+      <span class="sf-18">18+</span>
+      <p>Gamble responsibly. Set a limit before you start and never chase a loss.</p>
+    </div>
+    <div class="sf-links">
+      <span>Terms</span><span>Privacy</span><span>Responsible gambling</span><span>Support</span>
+    </div>
+    <div class="sf-note">
+      Prototype for a design contest. Sample data only — no real money, no real bets, no real odds.
+      housebets.com
+    </div>
+  </footer>`;
+}
+
 function renderShell() {
-  $('#main').innerHTML = pageHTML();
+  $('#main').innerHTML = pageHTML() + footerHTML();
   renderPanel();
   renderSlipBar();
   renderNav();
@@ -428,6 +454,17 @@ function fcardHTML(m) {
   </div>`;
 }
 
+/* the price half of an odds tile: the number, its direction arrow, and —
+   once it has moved — the price it moved from. */
+function priceInner(pk, v, d) {
+  const was = S.prev[pk];
+  const show = was != null && Math.abs(was - v) > 0.001;
+  return `<span class="opx">
+      <span class="oval">${d === 'up' ? '<span class="arw">▲</span> ' : d === 'down' ? '<span class="arw">▼</span> ' : ''}${odds2(v)}</span>
+      <span class="owas">${show ? `was ${odds2(was)}` : ''}</span>
+    </span>`;
+}
+
 function priceBtn(m, key, label) {
   const pk = P(m.id, key);
   const v = S.prices[pk];
@@ -437,7 +474,7 @@ function priceBtn(m, key, label) {
   return `<button class="o ${sel ? 'sel' : ''} ${susp ? 'susp' : ''} ${d === 'up' ? 'up' : d === 'down' ? 'down' : ''}" data-k="${pk}"
       data-sel="${key}" data-mname="Match result" data-fix="${m.id}" ${susp ? 'disabled' : ''}>
       <span class="oname">${esc(label)}</span>
-      <span class="oval">${d === 'up' ? '<span class="arw">▲</span> ' : d === 'down' ? '<span class="arw">▼</span> ' : ''}${odds2(v)}</span>
+      ${priceInner(pk, v, d)}
     </button>`;
 }
 
@@ -679,7 +716,7 @@ function marketsHTML(m) {
           return `<button class="o ${sel ? 'sel' : ''} ${d === 'up' ? 'up' : d === 'down' ? 'down' : ''}" data-k="${pk}"
               data-sel="${o.k}" data-mname="${esc(mk.name)}" data-fix="${m.id}" ${susp ? 'disabled' : ''}>
               <span class="oname">${esc(o.n)}</span>
-              <span class="oval">${d === 'up' ? '<span class="arw">▲</span> ' : d === 'down' ? '<span class="arw">▼</span> ' : ''}${odds2(v)}</span>
+              ${priceInner(pk, v, d)}
             </button>`;
         }).join('')}
       </div>
@@ -731,7 +768,11 @@ function slipHTML() {
       <div class="rline big"><span>Potential return</span><b>${money(ret)}</b></div>
     </div>
     <div style="height:10px"></div>
-    <button class="place" id="place" ${blocked ? 'disabled' : ''}>${blocked ? 'Resolve slip to continue' : 'Place bet'}</button>
+    ${S.failMsg ? `<div class="failbar" role="alert">
+      <span class="fb-ico">${I.lock}</span>
+      <span class="fb-tx"><b>Bet failed.</b> ${esc(S.failMsg)}</span>
+    </div>` : ''}
+    <button class="place" id="place" ${blocked ? 'disabled' : ''}>${S.failMsg ? 'Retry bet' : (blocked ? 'Resolve slip to continue' : 'Place bet')}</button>
   </div>`;
 }
 
@@ -1075,6 +1116,7 @@ function addToSlip(d) {
   });
   // tapping odds should always reveal the slip, wherever the panel was
   S.myBetsTab = 'slip';
+  S.failMsg = null;
   toast(`Added ${name} @ ${odds2(S.prices[k])}`, 'ok');
   renderShell();
 }
@@ -1084,8 +1126,11 @@ function placeBet() {
   if (!total) { toast('Enter a stake first', 'warn'); return; }
   if (S.nextFail) {
     S.nextFail = false;
+    // stays on the slip until the punter changes something — a toast would
+    // be gone before a judge read it.
+    S.failMsg = 'The market closed while your bet was being accepted.';
     toast('Bet failed — market closed while your bet was being accepted.', 'err');
-    $('#place') && ($('#place').textContent = 'Retry bet');
+    renderSlip(); bindPage();
     return;
   }
   const ret = S.slip.reduce((s, b) => s + (parseFloat(b.stake) || 0) * b.odds, 0);
@@ -1096,6 +1141,7 @@ function placeBet() {
     odds: first.odds, stake: total, status: 'open', placedAt: 'Just now', cashout: ret * 0.92
   });
   S.lastPlaced = { stake: total, ret, id };
+  S.failMsg = null;
   S.slip = [];
   renderShell();
   receipt(ret, total);
@@ -1138,6 +1184,15 @@ function renderOddsInPlace() {
     const d = S.dir[k];
     v.innerHTML = `${d === 'up' ? '<span class="arw">▲</span> ' : d === 'down' ? '<span class="arw">▼</span> ' : ''}${odds2(S.prices[k])}`;
     el.classList.toggle('up', d === 'up'); el.classList.toggle('down', d === 'down');
+    const was = S.prev[k];
+    const txt = (was != null && Math.abs(was - S.prices[k]) > 0.001) ? `was ${odds2(was)}` : '';
+    let w = el.querySelector('.owas');
+    if (!w) {
+      w = document.createElement('span'); w.className = 'owas';
+      (el.querySelector('.opx') || el).appendChild(w);
+    }
+    w.textContent = txt;
+    el.classList.toggle('moved', !!txt);
   });
 }
 function renderLiveClocks() {
@@ -1239,7 +1294,7 @@ function bindPage() {
 }
 
 function bindSlip(root) {
-  $$('[data-rm]', root).forEach(b => b.onclick = () => { S.slip = S.slip.filter(x => x.uid !== b.dataset.rm); renderShell(); });
+  $$('[data-rm]', root).forEach(b => b.onclick = () => { S.slip = S.slip.filter(x => x.uid !== b.dataset.rm); S.failMsg = null; renderShell(); });
   $$('[data-accept]', root).forEach(b => b.onclick = () => {
     const it = S.slip.find(x => x.uid === b.dataset.accept);
     if (it) { it.odds = it.changed; it.changed = null; toast('New odds accepted', 'ok'); }
@@ -1253,13 +1308,21 @@ function bindSlip(root) {
       const card = inp.closest('.bet');
       const r = card && card.querySelector('.returns b'); if (r) r.textContent = money((parseFloat(inp.value) || 0) * it.odds);
       refreshTotals();
+      // editing the stake is a fresh attempt, so drop the failure notice
+      // in place — a full re-render would steal focus mid-typing.
+      if (S.failMsg) {
+        S.failMsg = null;
+        const bar = document.querySelector('.failbar'); if (bar) bar.remove();
+        const pb = document.querySelector('#place');
+        if (pb) { pb.textContent = 'Place bet'; pb.disabled = false; }
+      }
     };
   });
   $$('[data-quick]', root).forEach(b => b.onclick = () => {
     const [uid, v] = b.dataset.quick.split(':');
     const it = S.slip.find(x => x.uid === uid); if (it) { it.stake = v; renderSlip(); bindPage(); }
   });
-  const ca = $('#clearAll', root); if (ca) ca.onclick = () => { S.slip = []; toast('Slip cleared', 'warn'); renderShell(); };
+  const ca = $('#clearAll', root); if (ca) ca.onclick = () => { S.slip = []; S.failMsg = null; toast('Slip cleared', 'warn'); renderShell(); };
   const pl = $('#place', root); if (pl) pl.onclick = placeBet;
   $$('[data-cash]', root).forEach(b => b.onclick = () => {
     const bet = S.bets.find(x => x.id === b.dataset.cash);
@@ -1300,20 +1363,25 @@ function renderLab() {
   if (pauseBtn) pauseBtn.innerHTML = `<i class="d" style="background:${S.paused ? '#F7C860' : '#6B8794'}"></i>${S.paused ? 'Resume live odds' : 'Pause live odds'}`;
 }
 
+/* Move a price the judge can actually see. Falls back to any price when
+   nothing is on screen (e.g. the empty states). */
+function driftVisible(delta) {
+  const vis = [...document.querySelectorAll('#main [data-k]')]
+    .map(el => el.dataset.k)
+    .filter(k => S.prices[k] != null && !k.includes(':dc-'));
+  const pool = vis.length ? vis : Object.keys(S.prices).filter(k => !k.includes(':dc-'));
+  if (!pool.length) return;
+  drift(pool[Math.floor(Math.random() * pool.length)], delta);
+}
+
 function labAction(a) {
   const m0 = HB.matches[0];
   FORCE = true; setTimeout(() => FORCE = false, 60);
   switch (a) {
-    case 'up': {
-      const keys = Object.keys(S.prices).filter(k => !k.includes(':dc-'));
-      const k = keys[Math.floor(Math.random() * keys.length)];
-      drift(k, +0.22); toast('Odds moved up on a live price', 'ok'); break;
-    }
-    case 'down': {
-      const keys = Object.keys(S.prices).filter(k => !k.includes(':dc-'));
-      const k = keys[Math.floor(Math.random() * keys.length)];
-      drift(k, -0.22); toast('Odds moved down on a live price', 'warn'); break;
-    }
+    /* Prefer a price that is actually on screen — drifting a key belonging
+       to a match the judge cannot see looks like nothing happened. */
+    case 'up':   { driftVisible(+0.22); toast('Odds moved up on a live price', 'ok');   break; }
+    case 'down': { driftVisible(-0.22); toast('Odds moved down on a live price', 'warn'); break; }
     case 'change':
       if (!S.slip.length) { addToSlip({ sel: 'mr-home', mname: 'Match result', fix: m0.id }); }
       if (S.slip.length) { drift(S.slip[0].selId, +0.30); toast('Odds changed — the slip now requires Accept', 'warn'); }

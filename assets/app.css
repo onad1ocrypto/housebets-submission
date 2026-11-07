@@ -392,6 +392,24 @@ body.route-bets .main::after{
 @keyframes flashUp{ 0%{background:rgba(53,211,154,.32);} 100%{background:var(--tile);} }
 @keyframes flashDown{ 0%{background:rgba(255,91,110,.30);} 100%{background:var(--tile);} }
 
+/* ---- price + what it moved from ------------------------------
+   The arrow says something changed; "was 1.30" says what from.
+   Space is reserved so a move never nudges the grid.
+--------------------------------------------------------------- */
+.o .opx{
+  display:flex; flex-direction:column; align-items:flex-end; justify-content:center;
+  gap:0; min-height:26px; flex:0 0 auto; line-height:1.2;
+}
+.o .owas{
+  font-size:9.5px; font-weight:600; letter-spacing:.01em;
+  color:var(--ink-4); white-space:nowrap; font-variant-numeric:tabular-nums;
+  /* ruang dipesan walau kosong -> harga bergerak tidak menggeser grid */
+  min-height:12px; line-height:12px;
+}
+.o.moved{ border-color:var(--hair-2); }
+.o.up.moved .owas{ color:rgba(53,211,154,.72); }
+.o.down.moved .owas{ color:rgba(255,91,110,.72); }
+
 .suspended{
   margin:2px 12px 12px; padding:8px 10px; border-radius:8px;
   background:rgba(255,255,255,.03); border:1px dashed var(--hair-2);
@@ -621,6 +639,25 @@ body.route-bets .main::after{
 }
 .bet .changedbar .msg{ font-size:11.5px; color:var(--gold); flex:1 1 auto; }
 .bet .changedbar .msg b{ font-weight:700; }
+
+/* ---- bet failed: a reason that stays put ---------------------
+   A toast is gone in four seconds. This sits on the slip until the
+   punter changes the stake, removes the leg, or the retry lands.
+--------------------------------------------------------------- */
+.failbar{
+  display:flex; align-items:flex-start; gap:9px;
+  margin:0 0 10px; padding:10px 11px; border-radius:9px;
+  background:rgba(255,91,110,.10); border:1px solid rgba(255,91,110,.34);
+  animation:failIn .28s ease-out;
+}
+.failbar .fb-ico{
+  flex:0 0 auto; color:var(--down); display:flex; margin-top:1px;
+}
+.failbar .fb-ico svg{ width:14px; height:14px; }
+.failbar .fb-tx{ font-size:12px; line-height:1.45; color:#FFC9D0; }
+.failbar .fb-tx b{ color:#FF5B6E; font-weight:750; }
+@keyframes failIn{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce){ .failbar{ animation:none; } }
 
 .pillbtn{
   padding:5px 11px; border-radius:7px; font-size:11.5px; font-weight:700;
@@ -1146,4 +1183,33 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 .chatin button{
   flex:0 0 44px; height:38px; border-radius:9px; display:grid; place-items:center;
   background:rgba(62,208,218,.16); border:1px solid rgba(62,208,218,.34); color:var(--aqua);
+}
+
+/* ============================================================
+   FOOTER — brand trace: 18+ / gamble responsibly
+   ============================================================ */
+.sitefoot{
+  margin:26px 16px 22px; padding-top:16px;
+  border-top:1px solid var(--hair);
+  color:var(--ink-4);
+}
+.sitefoot .sf-row{ display:flex; align-items:flex-start; gap:10px; }
+.sitefoot .sf-18{
+  flex:0 0 auto; margin-top:1px;
+  min-width:26px; height:18px; padding:0 5px; border-radius:4px;
+  border:1px solid var(--hair-2); color:var(--ink-3);
+  font-size:10.5px; font-weight:800; letter-spacing:.02em;
+  display:grid; place-items:center;
+}
+.sitefoot .sf-row p{ margin:0; font-size:12px; line-height:1.5; color:var(--ink-3); }
+.sitefoot .sf-links{
+  display:flex; flex-wrap:wrap; gap:14px; margin-top:10px;
+  font-size:11.5px; font-weight:600; color:var(--ink-4);
+}
+.sitefoot .sf-links span{ cursor:default; }
+.sitefoot .sf-note{
+  margin-top:10px; font-size:11px; line-height:1.55; color:#56707C;
+}
+@media (max-width:640px){
+  .sitefoot{ margin:22px 12px 18px; }
 }
