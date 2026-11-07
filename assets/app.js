@@ -635,7 +635,8 @@ function chatMsg(m) {
 
 /* ---------------- PAGE: football ---------------- */
 function pageFootball() {
-  const counts = { pl: 10, ucl: 4, liga: 4, seria: 6, bund: 5 };
+  const counts = {};
+  HB.comps.forEach(c => { counts[c.id] = HB.matches.filter(m => m.comp === c.id).length; });
   const list = S.footComp === 'all' ? HB.comps : HB.comps.filter(c => c.id === S.footComp);
   return `
   ${tabsHTML()}

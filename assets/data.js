@@ -64,23 +64,18 @@ HB.crestPatterns = ['solid', 'split', 'band', 'chevron', 'star'];
    susp:  true = whole market group suspended
 ------------------------------------------------- */
 HB.matches = [
+  /* Scheduling rule enforced here: a club can only be in ONE live match,
+     and never in a live match and a "starting soon" match at the same
+     time. Seven live fixtures need 14 clubs and two "soon" fixtures need
+     4 more - 18 in total - but the sample only has 16 clubs, which is
+     what put Napoli in two live games and Sevilla in two. Six live plus
+     two soon uses all 16 exactly once, so no club is ever in two places.
+     Pre fixtures are future dates, so they may reuse clubs freely. */
   {
     id: 'ars-bha', comp: 'pl', state: 'live', clock: "52'", minute: 52,
     home: 'ARS', away: 'BHA', hs: 1, as: 0,
     kick: 'LIVE', day: '', marketsCount: 115,
     odds: { 'mr-home': 1.30, 'mr-draw': 4.60, 'mr-away': 11.00 }
-  },
-  {
-    id: 'liv-mun', comp: 'pl', state: 'soon', clock: '', minute: 0,
-    home: 'LIV', away: 'MUN', hs: null, as: null,
-    kick: '16:30', day: 'Sun, Oct 18', marketsCount: 187,
-    odds: { 'mr-home': 1.65, 'mr-draw': 4.00, 'mr-away': 4.33 }
-  },
-  {
-    id: 'ars-int', comp: 'ucl', state: 'pre', clock: '', minute: 0,
-    home: 'ARS', away: 'INT', hs: null, as: null,
-    kick: '20:00', day: 'Tue, Oct 20', marketsCount: 85,
-    odds: { 'mr-home': 1.95, 'mr-draw': 3.50, 'mr-away': 4.00 }
   },
   {
     id: 'atm-sev', comp: 'liga', state: 'live', clock: "37'", minute: 37,
@@ -89,58 +84,72 @@ HB.matches = [
     odds: { 'mr-home': 1.44, 'mr-draw': 4.20, 'mr-away': 8.50 }
   },
   {
+    id: 'mci-tot', comp: 'pl', state: 'live', clock: "51'", minute: 51,
+    home: 'MCI', away: 'TOT', hs: 2, as: 0,
+    kick: 'LIVE', day: '', marketsCount: 143,
+    odds: { 'mr-home': 1.53, 'mr-draw': 4.40, 'mr-away': 6.20 }
+  },
+  {
+    id: 'nap-mil', comp: 'seria', state: 'live', clock: "74'", minute: 74,
+    home: 'NAP', away: 'MIL', hs: 1, as: 1,
+    kick: 'LIVE', day: '', marketsCount: 128,
+    odds: { 'mr-home': 2.10, 'mr-draw': 3.40, 'mr-away': 3.60 }
+  },
+  {
+    id: 'bay-bvb', comp: 'bund', state: 'live', clock: "12'", minute: 12,
+    home: 'BAY', away: 'BVB', hs: 0, as: 0,
+    kick: 'LIVE', day: '', marketsCount: 104,
+    odds: { 'mr-home': 1.62, 'mr-draw': 4.10, 'mr-away': 5.40 }
+  },
+  {
+    id: 'che-int', comp: 'ucl', state: 'live', clock: "68'", minute: 68,
+    home: 'CHE', away: 'INT', hs: 2, as: 1,
+    kick: 'LIVE', day: '', marketsCount: 167,
+    odds: { 'mr-home': 2.35, 'mr-draw': 3.30, 'mr-away': 3.10 }
+  },
+
+  {
+    id: 'liv-mun', comp: 'pl', state: 'soon', clock: '', minute: 0,
+    home: 'LIV', away: 'MUN', hs: null, as: null,
+    kick: '16:30', day: 'Sun, Oct 18', marketsCount: 187,
+    odds: { 'mr-home': 1.65, 'mr-draw': 4.00, 'mr-away': 4.33 }
+  },
+  {
+    id: 'rma-juv', comp: 'ucl', state: 'soon', clock: '', minute: 0,
+    home: 'RMA', away: 'JUV', hs: null, as: null,
+    kick: '20:45', day: 'Sun, Oct 18', marketsCount: 172,
+    odds: { 'mr-home': 2.05, 'mr-draw': 3.60, 'mr-away': 3.40 }
+  },
+
+  {
+    id: 'ars-int', comp: 'ucl', state: 'pre', clock: '', minute: 0,
+    home: 'ARS', away: 'INT', hs: null, as: null,
+    kick: '20:00', day: 'Tue, Oct 20', marketsCount: 85,
+    odds: { 'mr-home': 1.95, 'mr-draw': 3.50, 'mr-away': 4.00 }
+  },
+  {
     id: 'rma-bay', comp: 'ucl', state: 'pre', clock: '', minute: 0,
     home: 'RMA', away: 'BAY', hs: null, as: null,
     kick: '20:00', day: 'Tue, Oct 20', marketsCount: 110,
     odds: { 'mr-home': 2.20, 'mr-draw': 3.70, 'mr-away': 2.90 }
   },
   {
-    id: 'mci-tot', comp: 'pl', state: 'live', clock: "51'", minute: 51,
-    home: 'MCI', away: 'TOT', hs: 2, as: 0,
-    kick: 'LIVE', day: '', marketsCount: 132,
-    odds: { 'mr-home': 1.18, 'mr-draw': 7.50, 'mr-away': 15.00 }
-  },
-  {
-    id: 'nap-mil', comp: 'seria', state: 'live', clock: "74'", minute: 74,
-    home: 'NAP', away: 'MIL', hs: 1, as: 1,
-    kick: 'LIVE', day: '', marketsCount: 74,
-    odds: { 'mr-home': 2.60, 'mr-draw': 3.10, 'mr-away': 2.90 }
-  },
-  {
-    id: 'bvb-che', comp: 'bund', state: 'pre', clock: '', minute: 0,
+    id: 'bvb-che', comp: 'ucl', state: 'pre', clock: '', minute: 0,
     home: 'BVB', away: 'CHE', hs: null, as: null,
-    kick: '20:00', day: 'Wed, Oct 21', marketsCount: 88,
-    odds: { 'mr-home': 2.40, 'mr-draw': 3.60, 'mr-away': 2.80 }
-  },
-  {
-    id: 'juv-int', comp: 'seria', state: 'soon', clock: '', minute: 0,
-    home: 'JUV', away: 'INT', hs: null, as: null,
-    kick: '20:45', day: 'Sun, Oct 18', marketsCount: 91,
-    odds: { 'mr-home': 2.75, 'mr-draw': 3.30, 'mr-away': 2.55 }
+    kick: '20:00', day: 'Wed, Oct 21', marketsCount: 98,
+    odds: { 'mr-home': 2.55, 'mr-draw': 3.45, 'mr-away': 2.75 }
   },
   {
     id: 'sev-rma', comp: 'liga', state: 'pre', clock: '', minute: 0,
     home: 'SEV', away: 'RMA', hs: null, as: null,
-    kick: '21:00', day: 'Mon, Oct 19', marketsCount: 103,
-    odds: { 'mr-home': 4.10, 'mr-draw': 3.90, 'mr-away': 1.80 }
+    kick: '21:00', day: 'Sat, Oct 24', marketsCount: 121,
+    odds: { 'mr-home': 3.10, 'mr-draw': 3.55, 'mr-away': 2.25 }
   },
   {
-    id: 'che-liv', comp: 'pl', state: 'live', clock: "34'", minute: 34,
-    home: 'CHE', away: 'LIV', hs: 0, as: 1,
-    kick: 'LIVE', day: '', marketsCount: 168,
-    odds: { 'mr-home': 4.20, 'mr-draw': 3.60, 'mr-away': 1.85 }
-  },
-  {
-    id: 'int-nap', comp: 'seria', state: 'live', clock: "68'", minute: 68,
-    home: 'INT', away: 'NAP', hs: 2, as: 1,
-    kick: 'LIVE', day: '', marketsCount: 141,
-    odds: { 'mr-home': 1.44, 'mr-draw': 4.50, 'mr-away': 7.00 }
-  },
-  {
-    id: 'bay-sev', comp: 'ucl', state: 'live', clock: "12'", minute: 12,
-    home: 'BAY', away: 'SEV', hs: 0, as: 0,
-    kick: 'LIVE', day: '', marketsCount: 122,
-    odds: { 'mr-home': 1.55, 'mr-draw': 4.10, 'mr-away': 6.00 }
+    id: 'juv-mil', comp: 'seria', state: 'pre', clock: '', minute: 0,
+    home: 'JUV', away: 'MIL', hs: null, as: null,
+    kick: '18:00', day: 'Sun, Oct 25', marketsCount: 133,
+    odds: { 'mr-home': 2.00, 'mr-draw': 3.40, 'mr-away': 3.90 }
   }
 ];
 
@@ -150,7 +159,7 @@ HB.matches = [
    full-length for toasts and the page heading. */
 HB.sports = [
   { id: 'home',      label: 'Home',      short: 'Home',      icon: 'home',   count: 0 },
-  { id: 'live',      label: 'Live',      short: 'Live',      icon: 'live',   count: 13 },
+  { id: 'live',      label: 'Live',      short: 'Live',      icon: 'live',   count: 0 },  /* diisi dari HB.matches di bawah */
   { id: 'soccer',    label: 'Soccer',    short: 'Football',  icon: 'soccer', count: 0 },
   { id: 'tennis',    label: 'Tennis',    short: 'Tennis',    icon: 'tennis', count: 0 },
   { id: 'basket',    label: 'Basketball',short: 'Basket',    icon: 'hoop',   count: 0 },
@@ -416,11 +425,18 @@ HB.events = {
   'atm-sev': { goals: [{ s: 'h', p: 2, min: 31 }],                                   y: 3, r: 0 },
   'mci-tot': { goals: [{ s: 'h', p: 1, min: 12 }, { s: 'h', p: 3, min: 44 }],        y: 1, r: 0 },
   'nap-mil': { goals: [{ s: 'a', p: 1, min: 19 }, { s: 'h', p: 2, min: 58 }],        y: 4, r: 0 },
-  'che-liv': { goals: [{ s: 'a', p: 1, min: 27 }],                                   y: 2, r: 1 },
-  'int-nap': { goals: [{ s: 'h', p: 1, min: 8 }, { s: 'a', p: 1, min: 35 },
-                        { s: 'h', p: 2, min: 61 }],                                  y: 3, r: 0 },
-  'bay-sev': { goals: [],                                                             y: 0, r: 0 }
+  'bay-bvb': { goals: [],                                                             y: 0, r: 0 },
+  'che-int': { goals: [{ s: 'h', p: 1, min: 8 }, { s: 'a', p: 1, min: 35 },
+                        { s: 'h', p: 2, min: 61 }],                                  y: 3, r: 0 }
 };
+
+/* Keep the Live badge and every derived count in step with the fixtures.
+   A hardcoded number drifted to 13 while only 7 matches were live. */
+(function syncDerived() {
+  const live = HB.matches.filter(m => m.state === 'live').length;
+  const s = HB.sports.find(x => x.id === 'live');
+  if (s) s.count = live;
+})();
 
 HB.searchIndex = (function () {
   const out = [];
