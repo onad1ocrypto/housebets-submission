@@ -678,17 +678,21 @@ body.route-bets .main::after{
 .pillbtn.acc{ background:linear-gradient(180deg,#D8FBFA,#A7EDE8); color:#04222B; border-color:transparent; }
 .pillbtn:hover{ filter:brightness(1.08); }
 
-.stakeRow{ display:flex; gap:8px; margin-top:9px; }
+/* The input and the 10/25/50/100 row used to share one line: they needed
+   443px in the 256px the panel gives, so the buttons overflowed and were
+   clipped. Stack them — the input takes a full row, the quick amounts the
+   next — so nothing is ever cut off at any panel width. */
+.stakeRow{ display:flex; flex-direction:column; gap:7px; margin-top:9px; }
 .stake{
-  flex:1 1 auto; display:flex; align-items:center; gap:7px;
+  flex:0 0 auto; width:100%; min-width:0; display:flex; align-items:center; gap:7px;
   background:var(--card); border:1px solid var(--hair); border-radius:8px; padding:0 10px; height:36px;
 }
 .stake:focus-within{ border-color:rgba(62,208,218,.45); }
 .stake span{ color:var(--ink-4); font-size:12px; }
-.stake input{ flex:1 1 auto; background:none; border:0; outline:none; font-size:14px; font-weight:650; }
+.stake input{ flex:1 1 auto; min-width:0; width:100%; background:none; border:0; outline:none; font-size:14px; font-weight:650; }
 .quick{ display:flex; gap:5px; }
 .quick button{
-  padding:0 9px; height:36px; border-radius:8px; border:1px solid var(--hair);
+  flex:1 1 0; min-width:0; padding:0 4px; height:30px; border-radius:8px; border:1px solid var(--hair);
   background:var(--card); font-size:11.5px; color:var(--ink-3); font-weight:600;
 }
 .quick button:hover{ border-color:var(--hair-2); color:var(--ink); }
