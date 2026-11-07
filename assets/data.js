@@ -270,6 +270,15 @@ HB.seedBets = [
     odds: 3.40, stake: 20.00, status: 'lost', placedAt: 'Sat 18:45', ret: 0.00 }
 ];
 
+/* ---------- highlight posters ----------
+   Generated artwork. Deliberately contains no faces, no kits and
+   no text: the brief forbids real players and real player data.
+--------------------------------------------------------------- */
+HB.heroPoster = {
+  'ars-bha': 'assets/posters/ars-bha-hero.jpg',
+  'liv-mun': 'assets/posters/liv-mun-hero.jpg'
+};
+
 /* ---------- searchable index (teams, players, competitions, markets) ---------- */
 HB.searchIndex = (function () {
   const out = [];

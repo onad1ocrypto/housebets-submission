@@ -240,6 +240,38 @@ function pageHTML() {
   }
 }
 
+/* ---------------- highlight poster ---------------- */
+function heroHTML(m) {
+  const h = HB.teams[m.home], a = HB.teams[m.away];
+  const isLive = m.state === 'live';
+  const comp = (HB.comps.find(c => c.id === m.comp) || {}).name || '';
+  const art = HB.heroPoster[m.id];
+  return `
+  <div class="hero"${art ? ` style="background-image:url('${art}')"` : ''}>
+    <div class="heroin">
+      <div class="herotop">
+        ${isLive
+          ? `<span class="hlive"><i></i>LIVE ${esc(m.clock)}</span>`
+          : `<span class="hkick">${esc(m.kick)}${m.day ? ' \u00b7 ' + esc(m.day) : ''}</span>`}
+        <span class="hmeta">${esc(comp)} \u00b7 ${m.marketsCount} markets</span>
+      </div>
+      <div class="heromid">
+        <div class="hteam">${crest(m.home, 32)}<b>${esc(h.sname)}</b></div>
+        ${isLive
+          ? `<div class="hscore"><b>${m.hs}</b><span>:</span><b>${m.as}</b></div>`
+          : `<div class="hvs">v</div>`}
+        <div class="hteam right"><b>${esc(a.sname)}</b>${crest(m.away, 32)}</div>
+      </div>
+      <div class="heroodds">
+        ${priceBtn(m, 'mr-home', h.sname)}
+        ${priceBtn(m, 'mr-draw', 'Draw')}
+        ${priceBtn(m, 'mr-away', a.sname)}
+        <button class="hgo" data-open-match="${m.id}">All markets ${I.chevR}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
 /* ---------------- PAGE: home ---------------- */
 function pageHome() {
   const live = HB.matches.filter(m => m.state === 'live' && !S.noLive);
@@ -249,10 +281,13 @@ function pageHome() {
   const your = (mine.length ? mine : [HB.matches[0], HB.matches[1], HB.matches[2]]);
   const feat = [HB.matches[0], HB.matches[1], HB.matches[2], HB.matches[5]];
 
+  const hero = live[0] || soon[0] || HB.matches[0];
+
   return `
   ${searchHTML()}
   ${tabsHTML()}
   <div class="tabsrule"></div>
+  ${heroHTML(hero)}
   <section class="sect" style="padding-top:13px">
     <div class="secthead"><h2>Top competitions</h2><button class="more" data-go="football">View all ${I.chevR}</button></div>
   </section>
