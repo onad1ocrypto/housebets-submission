@@ -157,8 +157,8 @@ a{ color:inherit; text-decoration:none; }
    edge. Stronger once there is something in the slip.
 --------------------------------------------------------------- */
 @keyframes slipGlow{
-  0%,100%{ box-shadow:0 0 0 1px rgba(62,208,218,.08), 0 0 26px -10px rgba(62,208,218,.10); }
-  50%    { box-shadow:0 0 0 1px rgba(62,208,218,.24), 0 0 48px -8px rgba(62,208,218,.26); }
+  0%,100%{ box-shadow:0 0 0 1px rgba(247,200,96,.10), 0 0 26px -10px rgba(247,200,96,.13); }
+  50%    { box-shadow:0 0 0 1px rgba(247,200,96,.30), 0 0 50px -8px rgba(247,200,96,.32); }
 }
 @keyframes slipLine{
   0%   { transform:translateX(-100%); opacity:0; }
@@ -169,7 +169,7 @@ a{ color:inherit; text-decoration:none; }
 .panel{ animation:slipGlow 5.2s ease-in-out infinite; }
 .panel::before{
   content:""; position:absolute; top:0; left:0; right:0; height:1px; z-index:3;
-  background:linear-gradient(90deg, transparent, rgba(62,208,218,.85), transparent);
+  background:linear-gradient(90deg, transparent, rgba(247,200,96,.95), transparent);
   animation:slipLine 5.2s ease-in-out infinite; pointer-events:none;
 }
 .panel.has-bets{ animation-duration:3.4s; }
@@ -178,12 +178,12 @@ a{ color:inherit; text-decoration:none; }
 body.route-bets .main{ animation:slipGlow 5.2s ease-in-out infinite; }
 body.route-bets .main::before{
   content:""; position:absolute; top:0; left:0; right:0; height:1px; z-index:3;
-  background:linear-gradient(90deg, transparent, rgba(62,208,218,.85), transparent);
+  background:linear-gradient(90deg, transparent, rgba(247,200,96,.95), transparent);
   animation:slipLine 5.2s ease-in-out infinite; pointer-events:none;
 }
 @media (prefers-reduced-motion: reduce){
   .panel, .panel::before, body.route-bets .main, body.route-bets .main::before{ animation:none; }
-  .panel{ box-shadow:0 0 0 1px rgba(62,208,218,.16); }
+  .panel{ box-shadow:0 0 0 1px rgba(247,200,96,.18); }
 }
 
 /* ============================================================
@@ -870,3 +870,33 @@ body.bg-n::before{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
   background-repeat:repeat;
 }
+
+/* =============================================================
+   GOLD — the bet column's own identity.
+   Browse = aqua (the market grid). Bet = gold (your money).
+   Gold is already in the official Housebets palette (#F7C860),
+   where it means "something changed / you acted on it".
+   ============================================================= */
+.panel{ border-color:rgba(247,200,96,.22); }
+.panel .sliptab.on{ color:var(--gold); border-bottom-color:var(--gold); }
+.panel .bet .bt .pr{ color:var(--gold); }
+.panel .rline.big b{ color:var(--gold); }
+.panel .totals .t2 b{ color:var(--gold); }
+.panel .stake:focus-within{ border-color:rgba(247,200,96,.5); box-shadow:0 0 0 3px rgba(247,200,96,.10); }
+.panel .quick button:hover{ border-color:rgba(247,200,96,.42); color:var(--gold); }
+.panel .pillbtn.acc{ background:linear-gradient(180deg,#FDE7B4,#F7C860); color:#1A1204; }
+.panel .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); color:#1A1204; }
+.panel .empty .ico{ color:rgba(247,200,96,.55); }
+
+/* the full-width bets route carries the same identity */
+body.route-bets .sliptab.on{ color:var(--gold); border-bottom-color:var(--gold); }
+body.route-bets .rline.big b,
+body.route-bets .totals .t2 b{ color:var(--gold); }
+body.route-bets .bet .bt .pr{ color:var(--gold); }
+body.route-bets .pillbtn.acc{ background:linear-gradient(180deg,#FDE7B4,#F7C860); color:#1A1204; }
+body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); color:#1A1204; }
+
+/* the phone slip bar follows the same rule */
+.slipbar{ border-top:1px solid rgba(247,200,96,.30); }
+.slipbar .badge{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); color:#1A1204; }
+.slipbar .amt{ color:var(--gold); }
