@@ -298,7 +298,9 @@ function sportIcon(id){
 function tabsHTML() {
   return `<div class="tabs">
     ${HB.sports.map(s => {
-      const on = (s.id === 'home' && S.route === 'home') || (s.id === 'live' && S.route === 'live') || (s.id === 'soccer' && S.route === 'football');
+      const on = (s.id === 'home' && S.route === 'home') || (s.id === 'live' && S.route === 'live')
+              || (s.id === 'soccer' && S.route === 'football')
+              || (S.route === 'sport' && S.routeParam === s.id);
       return `<button class="tab ${on ? 'on' : ''}" data-tab="${s.id}">`
            + `<span class="tico">${sportIcon(s.id)}${s.count ? `<span class="n">${s.count}</span>` : ''}</span>`
            + `<span class="tlab">${esc(s.short || s.label)}</span></button>`;
@@ -310,6 +312,7 @@ function pageHTML() {
   switch (S.route) {
     case 'live':     return pageLive();
     case 'football': return pageFootball();
+    case 'sport':    return pageSport();
     case 'match':    return pageMatch();
     case 'bets':     return pageBets();
     case 'chat':     return pageChat();
@@ -635,6 +638,8 @@ function pageFootball() {
   const counts = { pl: 10, ucl: 4, liga: 4, seria: 6, bund: 5 };
   const list = S.footComp === 'all' ? HB.comps : HB.comps.filter(c => c.id === S.footComp);
   return `
+  ${tabsHTML()}
+  <div class="tabsrule"></div>
   <div class="phead">
     <button class="back" data-go="home">${I.back}</button>
     <h1 class="drop">Soccer ${I.chevD}</h1>
@@ -768,6 +773,49 @@ function renderMarketsLive() {
   const m = HB.matches.find(x => x.id === (S.routeParam || 'ars-bha')) || HB.matches[0];
   wrap.innerHTML = marketsHTML(m);
   $$('#mktwrap [data-sel]').forEach(b => b.onclick = () => addToSlip(b.dataset));
+}
+
+/* ---------------- PAGE: sport (no sample data) ----------------
+   Every sport tile now owns a real page instead of firing a toast,
+   so the tile can light up as active and the page still says
+   something useful rather than going nowhere.
+-------------------------------------------------------------- */
+function pageSport() {
+  const id = S.routeParam;
+  const s = HB.sports.find(x => x.id === id);
+  if (!s || !SPORT_ICO[id]) return pageHome();
+  const others = HB.sports.filter(x => SPORT_ICO[x.id] && x.id !== id).slice(0, 5);
+  return `
+  ${tabsHTML()}
+  <div class="tabsrule"></div>
+  <div class="phead">
+    <button class="back" data-go="home">${I.back}</button>
+    <h1 class="drop">${esc(s.label)}</h1>
+  </div>
+  <div class="sportpage">
+    <div class="sp-card">
+      <img class="sp-ball" src="assets/icons/96/${SPORT_ICO[id]}.png" alt="" width="96" height="96">
+      <h2>No ${esc(s.label.toLowerCase())} fixtures yet</h2>
+      <p class="sp-lede">
+        This prototype ships with 13 football fixtures across five competitions, so
+        the markets, bet slip, cash out and my bets can all be judged end to end.
+      </p>
+      <p class="sp-note">
+        In the full product ${esc(s.label)} would list its own competitions and
+        markets in exactly this layout — same cards, same slip, same flow.
+      </p>
+      <div class="sp-actions">
+        <button class="sp-cta" data-go="football">Browse football ${I.chevR}</button>
+        <button class="sp-ghost" data-go="live">See live now</button>
+      </div>
+    </div>
+    <div class="sp-others">
+      <span class="sp-others-h">Other sports</span>
+      ${others.map(o => `<button class="sp-tile" data-go="sport/${o.id}">
+        <img src="assets/icons/96/${SPORT_ICO[o.id]}.png" alt="" width="26" height="26">
+        <span>${esc(o.short || o.label)}</span></button>`).join('')}
+    </div>
+  </div>`;
 }
 
 /* ---------------- PAGE: bets (full width) ---------------- */
@@ -1264,10 +1312,7 @@ function bindPage() {
     if (id === 'live') go('live');
     else if (id === 'soccer') go('football');
     else if (id === 'home') go('home');
-    else {
-      const nm = (HB.sports.find(x => x.id === id) || {}).label || 'That sport';
-      toast(`No ${nm.toLowerCase()} fixtures in this sample data`, 'warn');
-    }
+    else if (HB.sports.some(x => x.id === id)) go('sport/' + id);
   });
   $$('[data-mkttab]').forEach(b => b.onclick = () => { S.mktTab = b.dataset.mkttab; renderMarketsLive(); bindPage(); });
   $$('[data-livef]').forEach(b => b.onclick = () => { S.liveFilter = b.dataset.livef; renderShell(); });

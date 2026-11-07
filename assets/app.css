@@ -290,18 +290,24 @@ body.route-bets .main::after{
   position:relative;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:6px; min-height:78px; padding:10px 5px 9px;
-  border:1px solid var(--hair); border-radius:11px;
-  background:rgba(255,255,255,.022);
-  font-size:11.5px; font-weight:650; color:var(--ink-3);
+  border:1px solid rgba(255,255,255,.16); border-radius:11px;
+  /* the whole page is dark, so the tiles carry a lighter raised surface
+     and a stronger border to read as a menu rather than flat ink */
+  background:linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.045));
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 2px 8px rgba(0,0,0,.28);
+  font-size:11.5px; font-weight:650; color:var(--ink-2);
   text-align:center; line-height:1.2;
   transition:border-color .16s ease, background .16s ease, color .16s ease, transform .16s ease;
 }
-.tab:hover{ color:var(--ink-2); border-color:var(--hair-2); background:rgba(255,255,255,.05); }
+.tab:hover{
+  color:var(--ink); border-color:rgba(255,255,255,.26);
+  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.075));
+}
 .tab.on{
-  color:var(--aqua);
-  border-color:rgba(62,208,218,.50);
-  background:rgba(62,208,218,.10);
-  box-shadow:inset 0 0 0 1px rgba(62,208,218,.10);
+  color:var(--aqua-hi);
+  border-color:rgba(62,208,218,.72);
+  background:linear-gradient(180deg, rgba(62,208,218,.26), rgba(62,208,218,.12));
+  box-shadow:0 0 0 1px rgba(62,208,218,.22), 0 3px 12px rgba(0,0,0,.32);
 }
 /* the icon + count badge sit together so the badge can hang off the ball */
 .tab .tico{ position:relative; display:grid; place-items:center; }
@@ -1391,4 +1397,61 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
   .tab .sport-ico{ width:28px; height:28px; flex:0 0 28px; }
   .tab .sport-ico.svg svg{ width:21px; height:21px; }
   .tab .n{ min-width:16px; height:16px; font-size:9px; top:-5px; right:-9px; }
+}
+
+/* ============================================================
+   SPORT PAGE — halaman kosong per olahraga
+   ============================================================ */
+.sportpage{ padding:14px 16px 26px; display:flex; flex-direction:column; gap:14px; }
+.sp-card{
+  border:1px solid var(--hair-2); border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.028));
+  padding:26px 22px 22px; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:9px;
+}
+.sp-ball{
+  width:76px; height:76px; object-fit:contain; display:block; margin-bottom:4px;
+  filter:saturate(1.02) brightness(1.04);
+  drop-shadow:0 6px 18px rgba(0,0,0,.45);
+}
+.sp-card h2{ font-size:19px; font-weight:750; color:var(--ink); letter-spacing:-.01em; }
+.sp-lede{ font-size:13.5px; line-height:1.55; color:var(--ink-2); max-width:52ch; }
+.sp-note{
+  font-size:12px; line-height:1.55; color:var(--ink-3); max-width:52ch;
+  padding-top:9px; margin-top:2px; border-top:1px solid var(--hair);
+}
+.sp-actions{ display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin-top:8px; }
+.sp-cta{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:10px 16px; border-radius:10px; border:0;
+  background:linear-gradient(180deg,#4FE3EC,#29B9C6);
+  color:#03222A; font-size:13px; font-weight:750;
+}
+.sp-cta:hover{ filter:brightness(1.07); }
+.sp-ghost{
+  padding:10px 16px; border-radius:10px;
+  border:1px solid var(--hair-2); background:rgba(255,255,255,.05);
+  color:var(--ink-2); font-size:13px; font-weight:650;
+}
+.sp-ghost:hover{ color:var(--ink); background:rgba(255,255,255,.09); }
+
+.sp-others{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.sp-others-h{ font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); }
+.sp-tile{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:7px 12px 7px 9px; border-radius:99px;
+  border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  font-size:12.5px; font-weight:650; color:var(--ink-2);
+}
+.sp-tile img{ width:22px; height:22px; object-fit:contain; display:block; }
+.sp-tile:hover{ color:var(--ink); border-color:rgba(255,255,255,.26); }
+
+@media (max-width:640px){
+  .sportpage{ padding:12px 12px 22px; }
+  .sp-card{ padding:20px 16px 18px; }
+  .sp-ball{ width:62px; height:62px; }
+  .sp-card h2{ font-size:17px; }
+  .sp-actions{ flex-direction:column; align-items:stretch; width:100%; }
+  .sp-cta, .sp-ghost{ justify-content:center; }
 }
