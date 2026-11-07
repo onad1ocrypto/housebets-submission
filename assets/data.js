@@ -45,6 +45,20 @@ HB.teams = {
 /* ---------- scorer names (invented) ---------- */
 HB.scorers = ['T. Reyes', 'M. Okonkwo', 'L. Vazquez', 'D. Halvorsen', 'J. Whitlock', 'S. Amankwah'];
 
+/* ---------- team crest system ----------
+   Original badge art, built from each team's own two colours.
+   Nothing here is copied from a real club: real badges are
+   trademarked and the brief requires your own work.
+   `shape` and `pattern` are picked deterministically from the
+   team code, so a team always gets the same badge.
+------------------------------------------------------------ */
+HB.crestShapes = [
+  'M6 3 H42 V23 C42 34.5 30.5 42.5 24 45.5 C17.5 42.5 6 34.5 6 23 Z',
+  'M24 2.5 L45 12 V27 C45 37.5 34.5 43.5 24 45.5 C13.5 43.5 3 37.5 3 27 V12 Z',
+  'M7 4 H41 V25.5 L24 34.5 L7 25.5 Z'
+];
+HB.crestPatterns = ['solid', 'split', 'band', 'chevron', 'star'];
+
 /* ---------- matches ----------
    state: 'live' | 'soon' | 'pre'
    susp:  true = whole market group suspended

@@ -963,3 +963,48 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
   .heroodds .o{ flex:1 1 30%; }
   .hgo{ flex:1 1 100%; justify-content:center; padding:9px 12px; }
 }
+
+/* ---- team crest badges ------------------------------------- */
+.crest{ display:block; line-height:0; flex:0 0 auto; }
+.crest svg{ display:block; width:100%; height:100%; }
+.trow .crest, .mrow .who .t .crest, .sb-team .crest{ display:block; }
+
+/* ---- bet history ------------------------------------------- */
+.histsum{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px;
+}
+.histsum .hs{
+  background:var(--card-2); border:1px solid var(--hair); border-radius:10px; padding:9px 10px;
+}
+.histsum .k{ font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--c-market); }
+.histsum .v{ font-size:17px; font-weight:750; color:var(--ink); margin-top:3px; font-variant-numeric:tabular-nums; }
+.histsum .v.up{ color:var(--up); } .histsum .v.dn{ color:var(--live); }
+.mb.hist{ border-color:var(--hair-2); }
+.shareRow{ margin-top:10px; padding-top:9px; border-top:1px dashed var(--hair-2); }
+.shb{
+  width:100%; display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  height:34px; border-radius:8px; font-size:12.5px; font-weight:650;
+  color:var(--gold); background:rgba(247,200,96,.10); border:1px solid rgba(247,200,96,.32);
+}
+.shb:hover{ background:rgba(247,200,96,.18); }
+
+/* ---- share modal ------------------------------------------- */
+.sharet{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.sharet h3{ margin:0; font-size:15px; font-weight:700; flex:1 1 auto; }
+.sharet .x{ color:var(--ink-3); display:grid; place-items:center; }
+.sharet .x:hover{ color:var(--ink); }
+.shareprev{
+  border-radius:12px; overflow:hidden; border:1px solid var(--hair-2); background:#061720;
+}
+.shareprev canvas{ display:block; width:100%; height:auto; }
+.sharenote{ font-size:12px; color:var(--ink-4); margin:10px 0 14px; line-height:1.5; }
+.sharebtns{ display:flex; flex-direction:column; gap:8px; }
+.sab{
+  display:flex; align-items:center; gap:9px; height:40px; padding:0 13px; border-radius:9px;
+  font-size:13px; font-weight:650; color:var(--ink);
+  background:rgba(255,255,255,.05); border:1px solid var(--hair-2);
+}
+.sab:hover{ background:rgba(255,255,255,.1); border-color:var(--hair-2); }
+.sab svg{ flex:0 0 auto; }
+.modal .card{ width:min(460px, 94vw); }
+@media (max-width:640px){ .histsum{ grid-template-columns:repeat(2,1fr); } }

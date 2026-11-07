@@ -14,6 +14,9 @@ const I = {
   base:  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.1" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width="1.5"/><path d="M8.4 3.6C6.5 6.4 6.5 17.6 8.4 20.4M15.6 3.6c1.9 2.8 1.9 14 0 16.8" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/><path d="M7.5 7.2l1.5-.5M8 10.2l1.5-.4M8.9 13.2l1.5-.3M16.5 7.2l-1.5-.5M16 10.2l-1.5-.4M15.1 13.2l-1.5-.3" stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/></svg>',
   nfl:   '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><g transform="rotate(-32 12 12)"><ellipse cx="12" cy="12" rx="9.3" ry="5.9" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width="1.5"/><path d="M12 8.5v7M9.7 9.3v5.4M14.3 9.3v5.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M7.7 10.5h8.6" stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/></g></svg>',
   esport:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7.6 8h8.8a5.4 5.4 0 0 1 5.4 5.4v.7a3.8 3.8 0 0 1-6.9 2.2l-1.1-1.8a2.4 2.4 0 0 0-2-1.1h-.6a2.4 2.4 0 0 0-2 1.1l-1.1 1.8A3.8 3.8 0 0 1 2.2 14.1v-.7A5.4 5.4 0 0 1 7.6 8Z" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.4 11.2v2.6M6.1 12.5h2.6" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/><circle cx="16.1" cy="11.9" r="1.05" fill="currentColor"/><circle cx="18.1" cy="13.6" r="1.05" fill="currentColor"/></svg>',
+  share: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M13.5 6.8a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6ZM4.6 12.4a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6ZM13.5 17.8a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6ZM6.3 8.9l7.4-3.7M6.3 11.1l7.4 3.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  dl:    '<svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 3v9m0 0 3.4-3.4M10 12 6.6 8.6M4 15.5h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  xlogo: '<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M15.3 2.6h2.6l-5.7 6.5 6.7 8.9h-5.2l-4.1-5.4-4.7 5.4H2.3l6.1-7-6.4-8.4h5.3l3.7 4.9 4.3-4.9Zm-.9 13.9h1.4L5.9 4.1H4.4l10 12.4Z"/></svg>',
   menu:  '<svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3.5 5.5h13M3.5 10h13M3.5 14.5h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   chat:  '<svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3.6 9.2c0-2.6 2.9-4.6 6.4-4.6s6.4 2 6.4 4.6-2.9 4.6-6.4 4.6c-.7 0-1.4-.08-2-.24L4.2 15.4l.62-2.5A4.7 4.7 0 0 1 3.6 9.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
   casino:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M6.5 3.5l4 13M13.5 3.5l-4 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="6.6" stroke="currentColor" stroke-width="1.5"/></svg>',
@@ -43,10 +46,45 @@ const money = n => '$' + (Math.round(n * 100) / 100).toLocaleString('en-US', { m
 const odds2 = n => (Math.round(n * 100) / 100).toFixed(2);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+let __crid = 0;
+function lum(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return (0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
+}
 function crest(abbr, size) {
   const t = HB.teams[abbr];
-  const st = size ? `width:${size}px;height:${size}px;font-size:${Math.round(size * 0.36)}px;` : '';
-  return `<i class="crest" style="background:${t.col};color:${t.col2};${st}">${t.abbr}</i>`;
+  if (!t) return '';
+  let h = 0;
+  for (let i = 0; i < abbr.length; i++) h = (h * 31 + abbr.charCodeAt(i)) >>> 0;
+  const shape = HB.crestShapes[h % HB.crestShapes.length];
+  const pat   = HB.crestPatterns[(h >>> 3) % HB.crestPatterns.length];
+  const uid   = 'cr' + (++__crid);
+  const dark  = lum(t.col) > 0.55;
+  const ink   = dark ? '#071620' : '#FFFFFF';
+  const halo  = dark ? 'rgba(255,255,255,.65)' : 'rgba(3,16,21,.6)';
+  let extra = '';
+  if (pat === 'split')   extra = `<rect x="24" y="0" width="24" height="48" fill="${t.col2}"/>`;
+  if (pat === 'band')    extra = `<rect x="0" y="17" width="48" height="13" fill="${t.col2}"/>`;
+  if (pat === 'chevron') extra = `<path d="M0 18 L24 29 L48 18 V31 L24 42 L0 31 Z" fill="${t.col2}"/>`;
+  if (pat === 'star')    extra = `<path d="M24 6.5 l4.7 9.9 10.8 1.3 -8 7.2 2.1 10.7 -9.6-5.3 -9.6 5.3 2.1-10.7 -8-7.2 10.8-1.3Z" fill="${t.col2}" opacity=".9"/>`;
+  const st = size ? `width:${size}px;height:${size}px;` : '';
+  return `<span class="crest" style="${st}" title="${esc(t.name)}" aria-label="${esc(t.name)}">
+    <svg viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <defs><clipPath id="${uid}"><path d="${shape}"/></clipPath></defs>
+      <g clip-path="url(#${uid})">
+        <rect width="48" height="48" fill="${t.col}"/>${extra}
+        <rect width="48" height="48" fill="url(#${uid}g)"/>
+      </g>
+      <path d="${shape}" fill="none" stroke="rgba(255,255,255,.36)" stroke-width="1.7"/>
+      <text x="24" y="24.5" text-anchor="middle" dominant-baseline="middle"
+            font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="14"
+            letter-spacing=".5" fill="${ink}" stroke="${halo}" stroke-width="2.6"
+            paint-order="stroke" stroke-linejoin="round">${t.abbr}</text>
+      <defs><linearGradient id="${uid}g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#000" stop-opacity=".18"/>
+      </linearGradient></defs>
+    </svg></span>`;
 }
 
 /* ---------------- persistent-ish state ---------------- */
@@ -592,9 +630,10 @@ function betsHTML() {
   <div class="sliptabs">
     <button class="sliptab ${S.myBetsTab === 'slip' ? 'on' : ''}" data-mbt="slip">Bet slip${S.slip.length ? `<span class="n">${S.slip.length}</span>` : ''}</button>
     <button class="sliptab ${S.myBetsTab === 'my' ? 'on' : ''}" data-mbt="my">My bets</button>
+    <button class="sliptab ${S.myBetsTab === 'history' ? 'on' : ''}" data-mbt="history">History</button>
     ${S.myBetsTab === 'slip' && S.slip.length ? '<button class="clr" id="clearAll">Clear all</button>' : ''}
   </div>
-  <div id="betsBody">${S.myBetsTab === 'slip' ? slipHTML() : myBetsHTML()}</div>`;
+  <div id="betsBody">${betsBodyHTML()}</div>`;
 }
 
 function slipHTML() {
@@ -694,24 +733,25 @@ function renderPanel() {
     <div class="sliptabs">
       <button class="sliptab ${S.myBetsTab === 'slip' ? 'on' : ''}" data-mbt="slip">Bet slip${S.slip.length ? `<span class="n">${S.slip.length}</span>` : ''}</button>
       <button class="sliptab ${S.myBetsTab === 'my' ? 'on' : ''}" data-mbt="my">My bets</button>
+    <button class="sliptab ${S.myBetsTab === 'history' ? 'on' : ''}" data-mbt="history">History</button>
       ${S.myBetsTab === 'slip' && S.slip.length ? '<button class="clr" id="clearAll">Clear all</button>' : ''}
     </div>
-    <div class="slipbody" id="panelBody">${S.myBetsTab === 'slip' ? slipHTML() : myBetsHTML()}</div>`;
+    <div class="slipbody" id="panelBody">${betsBodyHTML()}</div>`;
   bindSlip(p);
 }
 
 function renderSlip() {
   const pb = $('#panelBody'); if (pb && S.route !== 'bets') {
-    pb.innerHTML = S.myBetsTab === 'slip' ? slipHTML() : myBetsHTML();
+    pb.innerHTML = betsBodyHTML();
     bindSlip(pb);
   }
   const bi = $('#betsBody'); if (bi) {
-    bi.innerHTML = S.myBetsTab === 'slip' ? slipHTML() : myBetsHTML();
+    bi.innerHTML = betsBodyHTML();
     bindSlip(bi);
   }
   if (S.sheetOpen) {
     const sb = $('#sheetBody');
-    if (sb) { sb.innerHTML = S.myBetsTab === 'slip' ? slipHTML() : myBetsHTML(); bindSlip(sb); }
+    if (sb) { sb.innerHTML = betsBodyHTML(); bindSlip(sb); }
   }
   renderSlipBar();
 }
@@ -743,8 +783,181 @@ function openSheet() {
   S.sheetOpen = true;
   const sh = $('#sheet');
   sh.classList.add('open');
-  $('#sheetBody').innerHTML = S.myBetsTab === 'slip' ? slipHTML() : myBetsHTML();
+  $('#sheetBody').innerHTML = betsBodyHTML();
   bindSlip($('#sheetBody'));
+}
+
+
+function betsBodyHTML() {
+  if (S.myBetsTab === 'slip') return slipHTML();
+  if (S.myBetsTab === 'history') return historyHTML();
+  return myBetsHTML();
+}
+
+/* ---------------- bet history ---------------- */
+function historyHTML() {
+  const settled = S.bets.filter(b => b.status !== 'open');
+  const won  = settled.filter(b => b.status === 'won').length;
+  const lost = settled.filter(b => b.status === 'lost' || b.status === 'cashed').length;
+  const staked = settled.reduce((a, b) => a + b.stake, 0);
+  const back   = settled.reduce((a, b) => a + (b.status === 'won' ? b.ret : (b.status === 'cashed' ? (b.cashout || 0) : 0)), 0);
+  const net = back - staked;
+  return `<div style="padding:10px 12px">
+    <div class="histsum">
+      <div class="hs"><div class="k">Settled</div><div class="v">${settled.length}</div></div>
+      <div class="hs"><div class="k">Won</div><div class="v up">${won}</div></div>
+      <div class="hs"><div class="k">Lost</div><div class="v dn">${lost}</div></div>
+      <div class="hs"><div class="k">Net</div><div class="v ${net >= 0 ? 'up' : 'dn'}">${net >= 0 ? '+' : '\u2212'}${money(Math.abs(net))}</div></div>
+    </div>
+    ${settled.length
+      ? settled.map(b => histHTML(b)).join('')
+      : `<div style="padding:14px 0">${emptyHTML('No settled bets', 'Once a bet settles it moves here, and you can share how it went.')}</div>`}
+    <div style="height:16px"></div>
+  </div>`;
+}
+
+function histHTML(b) {
+  const won = b.status === 'won';
+  const ret = b.status === 'cashed' ? (b.cashout || 0) : (won ? b.ret : 0);
+  return `<div class="mb hist">
+    <div class="sh">
+      <span class="st ${b.status}">${b.status === 'cashed' ? 'Cashed out' : b.status}</span>
+      <span class="dt">${esc(b.placedAt)}</span>
+    </div>
+    <div class="sel">${esc(b.sel)} <span style="color:var(--aqua);font-weight:700">@${odds2(b.odds)}</span></div>
+    <div class="meta">${esc(b.market)} \u00b7 ${esc(b.fixture)}</div>
+    <div class="figs">
+      <div class="f"><div class="k">Stake</div><div class="v">${money(b.stake)}</div></div>
+      <div class="f"><div class="k">Return</div><div class="v" style="color:${won ? 'var(--up)' : 'var(--ink)'}">${money(ret)}</div></div>
+      <div class="f"><div class="k">Result</div><div class="v" style="color:${won ? 'var(--up)' : 'var(--live)'}">${b.status === 'cashed' ? 'Cashed' : won ? 'Won' : 'Lost'}</div></div>
+    </div>
+    <div class="shareRow"><button class="shb" data-share="${b.id}">${I.share} Share result</button></div>
+  </div>`;
+}
+
+/* ---------------- share card ---------------- */
+function rr(g, x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y); g.lineTo(x + w - r, y); g.quadraticCurveTo(x + w, y, x + w, y + r);
+  g.lineTo(x + w, y + h - r); g.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  g.lineTo(x + r, y + h); g.quadraticCurveTo(x, y + h, x, y + h - r);
+  g.lineTo(x, y + r); g.quadraticCurveTo(x, y, x + r, y); g.closePath();
+}
+function fmt(n) { return (Math.round(n * 100) / 100).toFixed(2); }
+
+function renderCardTo(cv, b) {
+  const W = 1200, H = 675, g = cv.getContext('2d');
+  cv.width = W; cv.height = H;
+  const won = b.status === 'won';
+  const ret = b.status === 'cashed' ? (b.cashout || 0) : (won ? b.ret : 0);
+  const F = (sz, w) => `${w || 700} ${sz}px Inter, system-ui, -apple-system, sans-serif`;
+
+  const bg = g.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#0B2331'); bg.addColorStop(.55, '#061720'); bg.addColorStop(1, '#031015');
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+
+  for (let k = 0; k < 2; k++) {
+    g.strokeStyle = k ? 'rgba(62,208,218,.07)' : 'rgba(62,208,218,.13)';
+    g.lineWidth = k ? 1.6 : 2.4; g.beginPath();
+    for (let x = 0; x <= W; x += 4) {
+      const y = H - 96 + k * 30 + Math.sin((x / W) * Math.PI * 4 + k * 1.2) * 17;
+      x === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
+    }
+    g.stroke();
+  }
+  const rg = g.createRadialGradient(W / 2, 30, 0, W / 2, 30, 560);
+  rg.addColorStop(0, won ? 'rgba(53,211,154,.15)' : 'rgba(244,31,80,.13)');
+  rg.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, W, H);
+
+  g.fillStyle = '#FFFFFF'; g.font = F(36, 800); g.fillText('Housebets', 64, 84);
+  const hw = g.measureText('Housebets').width;
+  g.fillStyle = '#3ED0DA'; g.beginPath(); g.arc(64 + hw + 16, 74, 5.5, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#6B8794'; g.font = F(15, 600);
+  g.fillText('B E T   S E T T L E D', 64, 116);
+
+  const bw = won ? 190 : 200, bh = 62;
+  g.fillStyle = won ? 'rgba(53,211,154,.16)' : 'rgba(244,31,80,.16)'; rr(g, 64, 152, bw, bh, 14); g.fill();
+  g.strokeStyle = won ? 'rgba(53,211,154,.55)' : 'rgba(244,31,80,.55)';
+  g.lineWidth = 2; rr(g, 64, 152, bw, bh, 14); g.stroke();
+  g.fillStyle = won ? '#5BD8A0' : '#FF6B8B'; g.font = F(26, 800);
+  g.fillText(b.status === 'cashed' ? 'Cashed out' : won ? 'WON' : 'LOST', 64 + 26, 152 + 41);
+
+  g.fillStyle = '#78909E'; g.font = F(15, 600);
+  g.fillText((b.market || 'Match result').toUpperCase(), 64, 268);
+  g.font = F(42, 750);
+  const selW = g.measureText(b.sel).width;      // measure in the SAME font we drew with
+  g.fillStyle = '#FFFFFF';
+  g.fillText(b.sel, 64, 322);
+  g.font = F(30, 750);
+  g.fillStyle = '#3ED0DA';
+  g.fillText('@ ' + fmt(b.odds), 64 + selW + 18, 322);
+
+  g.fillStyle = '#A9C6D2'; g.font = F(19, 500);
+  g.fillText(b.fixture, 64, 372);
+
+  const rows = [['Stake', fmt(b.stake) + ' USDT', '#FFFFFF'],
+                [won || b.status === 'cashed' ? 'Returned' : 'Return', fmt(ret) + ' USDT', won ? '#5BD8A0' : '#FFFFFF']];
+  let y = 452;
+  rows.forEach(([k, v, col]) => {
+    g.fillStyle = '#6B8794'; g.font = F(16, 600); g.fillText(k.toUpperCase(), 64, y);
+    g.fillStyle = col; g.font = F(30, 750); g.textAlign = 'right'; g.fillText(v, W - 64, y);
+    g.textAlign = 'left';
+    g.strokeStyle = 'rgba(255,255,255,.08)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(64, y + 22); g.lineTo(W - 64, y + 22); g.stroke();
+    y += 74;
+  });
+
+  g.fillStyle = '#5C7684'; g.font = F(14, 500);
+  g.fillText('Sample data — design prototype. No real money, no real bets.', 64, H - 44);
+  g.textAlign = 'right'; g.fillStyle = '#3ED0DA'; g.font = F(14, 600);
+  g.fillText('housebets.com', W - 64, H - 44); g.textAlign = 'left';
+  return cv;
+}
+
+function shareBet(id) {
+  const b = S.bets.find(x => x.id === id);
+  if (!b) return;
+  const m = $('#modal');
+  m.querySelector('.card').innerHTML = `
+    <div class="sharet"><h3>Share this result</h3><button class="x" data-closemodal="1">${I.x}</button></div>
+    <div class="shareprev"><canvas id="shareCanvas"></canvas></div>
+    <p class="sharenote">Prototype only — the numbers are sample data and no real money was staked.</p>
+    <div class="sharebtns">
+      <button class="sab" data-share-png="${b.id}">${I.dl} Download PNG</button>
+      <button class="sab" data-share-x="${b.id}">${I.xlogo} Share on X</button>
+      <button class="sab" data-share-chat="${b.id}">${I.chat} Share to chatroom</button>
+    </div>`;
+  m.classList.add('open');
+  renderCardTo(document.getElementById('shareCanvas'), b);
+
+  m.querySelector('[data-closemodal]').onclick = () => m.classList.remove('open');
+  const cv = document.getElementById('shareCanvas');
+
+  m.querySelector('[data-share-png]').onclick = () => {
+    cv.toBlob(bl => {
+      const u = URL.createObjectURL(bl);
+      const a = document.createElement('a');
+      a.href = u; a.download = 'housebets-bet-' + b.id + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(u), 4000);
+      toast('PNG saved to your downloads', 'ok');
+    }, 'image/png');
+  };
+  m.querySelector('[data-share-x]').onclick = () => {
+    const res = (b.status === 'won') ? 'won' : 'lost';
+    const txt = b.sel + ' @ ' + fmt(b.odds) + ' — ' + res + '\n' + b.fixture +
+                '\n\nSample data from a Housebets sportsbook prototype. No real money.';
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(txt), '_blank', 'noopener');
+  };
+  m.querySelector('[data-share-chat]').onclick = () => {
+    S.chat = S.chat || [];
+    const res2 = (b.status === 'won') ? 'won' : 'lost';
+    S.chat.push({ id: 'c' + Date.now(), bet: b.id,
+                  text: b.sel + ' @ ' + fmt(b.odds) + ' — ' + res2, at: 'Just now' });
+    toast('Result posted to the chatroom', 'ok');
+    m.classList.remove('open');
+  };
 }
 
 /* ---------------- actions ---------------- */
@@ -893,6 +1106,7 @@ function bindPage() {
   });
   $$('[data-sel]').forEach(b => b.onclick = () => addToSlip(b.dataset));
   $$('[data-mbt]').forEach(b => b.onclick = () => { S.myBetsTab = b.dataset.mbt; renderSlip(); bindPage(); });
+  $$('[data-share]').forEach(b => b.onclick = () => shareBet(b.dataset.share));
 
   // search
   const q = $('#q'), q2 = $('#q2');
