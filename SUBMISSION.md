@@ -7,12 +7,16 @@ Fill the form with the four fields below.
 
 ## 1 — Link to your clickable prototype
 
-> _(paste the public link here once deployed — Vercel / Netlify / GitHub Pages)_
+**https://housebets-sportsbook-ashy.vercel.app**
 
-Requirements check before you paste it:
-- [ ] Opens **without a login** (turn off Vercel Deployment Protection / password)
-- [ ] Opens on desktop and on a phone
-- [ ] `https://` (no mixed content)
+Opens without a login. Works at 1440px and 390px.
+
+Verified on the live deploy:
+- [x] Opens **without a login** (200 on `/`, no auth wall)
+- [x] All four asset files load (css, js, data, official wordmark)
+- [x] Renders on desktop (1440) and phone (390), no horizontal overflow
+- [x] `https://`, no mixed content
+- [x] 11/11 functional checks passed on the live URL
 
 ---
 

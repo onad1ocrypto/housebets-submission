@@ -4,6 +4,8 @@ Clickable prototype for **Housebets Sportsbook is coming** ($15,000, Housebets C
 
 **Five pages, one shell, sample data. No login, no backend, no real money.**
 
+**Live:** https://housebets-sportsbook-ashy.vercel.app
+
 ## Pages
 
 | # | Page | Route |
