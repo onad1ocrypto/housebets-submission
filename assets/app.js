@@ -46,12 +46,28 @@ const money = n => '$' + (Math.round(n * 100) / 100).toLocaleString('en-US', { m
 const odds2 = n => (Math.round(n * 100) / 100).toFixed(2);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+/* Real club badges, 128x128 PNG with transparency.
+   Source: TheSportsDB open API (team search by name, filtered to
+   the correct league) — Brighton came from Wikimedia because the
+   API only indexes the women's side.
+   If an image is ever missing we fall back to a generated badge
+   built from the team's own two colours. */
+function crest(abbr, size) {
+  const t = HB.teams[abbr];
+  if (!t) return '';
+  const st = size ? `width:${size}px;height:${size}px;` : '';
+  return `<span class="crest" style="${st}" title="${esc(t.name)}" aria-label="${esc(t.name)}">
+    <img src="assets/crests/${abbr}.png" alt="${esc(t.name)}"
+         onerror="this.parentNode.innerHTML=crestFallback('${abbr}');"></span>`;
+}
+
+/* Generated stand-in: a shield in the team's two colours with its monogram. */
 let __crid = 0;
 function lum(hex) {
   const n = parseInt(hex.slice(1), 16);
   return (0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
 }
-function crest(abbr, size) {
+function crestFallback(abbr) {
   const t = HB.teams[abbr];
   if (!t) return '';
   let h = 0;
@@ -67,24 +83,16 @@ function crest(abbr, size) {
   if (pat === 'band')    extra = `<rect x="0" y="17" width="48" height="13" fill="${t.col2}"/>`;
   if (pat === 'chevron') extra = `<path d="M0 18 L24 29 L48 18 V31 L24 42 L0 31 Z" fill="${t.col2}"/>`;
   if (pat === 'star')    extra = `<path d="M24 6.5 l4.7 9.9 10.8 1.3 -8 7.2 2.1 10.7 -9.6-5.3 -9.6 5.3 2.1-10.7 -8-7.2 10.8-1.3Z" fill="${t.col2}" opacity=".9"/>`;
-  const st = size ? `width:${size}px;height:${size}px;` : '';
-  return `<span class="crest" style="${st}" title="${esc(t.name)}" aria-label="${esc(t.name)}">
-    <svg viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet" focusable="false">
-      <defs><clipPath id="${uid}"><path d="${shape}"/></clipPath></defs>
-      <g clip-path="url(#${uid})">
-        <rect width="48" height="48" fill="${t.col}"/>${extra}
-        <rect width="48" height="48" fill="url(#${uid}g)"/>
-      </g>
-      <path d="${shape}" fill="none" stroke="rgba(255,255,255,.36)" stroke-width="1.7"/>
-      <text x="24" y="24.5" text-anchor="middle" dominant-baseline="middle"
-            font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="14"
-            letter-spacing=".5" fill="${ink}" stroke="${halo}" stroke-width="2.6"
-            paint-order="stroke" stroke-linejoin="round">${t.abbr}</text>
-      <defs><linearGradient id="${uid}g" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#fff" stop-opacity=".14"/>
-        <stop offset="1" stop-color="#000" stop-opacity=".18"/>
-      </linearGradient></defs>
-    </svg></span>`;
+  return `<svg viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet" focusable="false">
+    <defs><clipPath id="${uid}"><path d="${shape}"/></clipPath></defs>
+    <g clip-path="url(#${uid})">
+      <rect width="48" height="48" fill="${t.col}"/>${extra}
+    </g>
+    <path d="${shape}" fill="none" stroke="rgba(255,255,255,.36)" stroke-width="1.7"/>
+    <text x="24" y="24.5" text-anchor="middle" dominant-baseline="middle"
+          font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="14"
+          fill="${ink}" stroke="${halo}" stroke-width="2.6" paint-order="stroke"
+          stroke-linejoin="round">${t.abbr}</text></svg>`;
 }
 
 /* ---------------- persistent-ish state ---------------- */

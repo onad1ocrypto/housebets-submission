@@ -1008,3 +1008,6 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 .sab svg{ flex:0 0 auto; }
 .modal .card{ width:min(460px, 94vw); }
 @media (max-width:640px){ .histsum{ grid-template-columns:repeat(2,1fr); } }
+
+/* ---- club badges ------------------------------------------- */
+.crest img{ width:100%; height:100%; object-fit:contain; display:block; }
