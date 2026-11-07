@@ -282,6 +282,7 @@ function pageHTML() {
     case 'football': return pageFootball();
     case 'match':    return pageMatch();
     case 'bets':     return pageBets();
+    case 'chat':     return pageChat();
     default:         return pageHome();
   }
 }
@@ -518,6 +519,72 @@ function mcardHTML(m) {
 
 function emptyHTML(title, msg, withSoon) {
   return `<div class="empty"><div class="ico">${I.inbox}</div><h3>${esc(title)}</h3><p>${esc(msg)}</p></div>`;
+}
+
+
+/* ---------------- PAGE: chat ---------------- */
+let HUBIE = null;
+function loadHubie(cb) {
+  if (HUBIE) { cb(HUBIE); return; }
+  const i = new Image();
+  i.onload = () => { HUBIE = i; cb(i); };
+  i.onerror = () => cb(null);
+  i.src = 'assets/brand/hubie.png';
+}
+
+function pageChat() {
+  const shared = S.chat || [];
+  return `
+  <div class="phead"><button class="back" data-go="home">${I.back}</button><h1>Housebets chat</h1></div>
+  <div class="chatwrap">
+    <div class="chatnote">Public room · ${HB.seedChat.length + shared.length} messages · sample data</div>
+    ${HB.seedChat.map(m => chatMsg(m)).join('')}
+    ${shared.map(m => chatMsg(m)).join('')}
+    ${!shared.length ? `<div style="padding:18px 0">${emptyHTML('Nothing shared yet', 'Share a settled bet from History and it lands in this room.')}</div>` : ''}
+    <div style="height:14px"></div>
+  </div>
+  <form class="chatin" id="chatForm">
+    <input id="chatMsg" maxlength="140" placeholder="Say something to the room…" autocomplete="off">
+    <button type="submit" aria-label="Send">${I.share}</button>
+  </form>`;
+}
+
+function chatMsg(m) {
+  if (m.betId) {
+    const b = S.bets.find(x => x.id === m.betId);
+    if (!b) return '';
+    const won = b.status === 'won';
+    const ret = b.status === 'cashed' ? (b.cashout || 0) : (won ? b.ret : 0);
+    return `<div class="msg mine">
+      <div class="av me">You</div>
+      <div class="bub">
+        <div class="betshare">
+          <div class="bs-top">
+            <span class="res ${won ? 'won' : 'lost'}">${b.status === 'cashed' ? 'Cashed out' : won ? 'Won' : 'Lost'}</span>
+            <span class="bs-odds">@${odds2(b.odds)}</span>
+          </div>
+          <div class="bs-sel">${esc(b.sel)}</div>
+          <div class="bs-fix">${esc(b.fixture)}</div>
+          <div class="bs-fig">
+            <span>Stake <b>${money(b.stake)}</b></span>
+            <span>Return <b style="color:${won ? 'var(--up)' : 'var(--ink)'}">${money(ret)}</b></span>
+          </div>
+        </div>
+        <div class="tm">${esc(m.at)}</div>
+      </div></div>`;
+  }
+  const who = m.who || 'You';
+  const mine = !!m.local || who === 'You';
+  const av = m.hubie
+    ? `<img class="av hubie" src="assets/brand/hubie.png" alt="Hubie">`
+    : `<div class="av${mine ? ' me' : ''}">${esc(who.slice(0, 2).toUpperCase())}</div>`;
+  return `<div class="msg${m.hubie ? ' hubierow' : (mine ? ' mine' : '')}">
+    ${av}
+    <div class="bub">
+      <div class="who">${esc(who)}</div>
+      <div class="tx">${esc(m.text)}</div>
+      <div class="tm">${esc(m.at)}</div>
+    </div></div>`;
 }
 
 /* ---------------- PAGE: football ---------------- */
@@ -916,6 +983,22 @@ function renderCardTo(cv, b) {
     y += 74;
   });
 
+  // Hubie celebrates with you — only on a win
+  if (won && HUBIE) {
+    const hh = 250, hw = hh * (HUBIE.width / HUBIE.height);
+    const hx = W - hw - 58, hy = 96;
+    g.save();
+    g.globalAlpha = .96;
+    g.drawImage(HUBIE, hx, hy, hw, hh);
+    g.restore();
+    g.fillStyle = '#5BD8A0'; g.font = F(15, 700);
+    g.textAlign = 'right';
+    g.fillText('Nice one', W - 58, hy + hh + 26);
+    g.fillStyle = '#6B8794'; g.font = F(13, 500);
+    g.fillText('Hubie', W - 58, hy + hh + 48);
+    g.textAlign = 'left';
+  }
+
   g.fillStyle = '#5C7684'; g.font = F(14, 500);
   g.fillText('Sample data — design prototype. No real money, no real bets.', 64, H - 44);
   g.textAlign = 'right'; g.fillStyle = '#3ED0DA'; g.font = F(14, 600);
@@ -937,7 +1020,12 @@ function shareBet(id) {
       <button class="sab" data-share-chat="${b.id}">${I.chat} Share to chatroom</button>
     </div>`;
   m.classList.add('open');
-  renderCardTo(document.getElementById('shareCanvas'), b);
+  const cv0 = document.getElementById('shareCanvas');
+  renderCardTo(cv0, b);
+  loadHubie(() => {
+    const cv2 = document.getElementById('shareCanvas');
+    if (cv2) renderCardTo(cv2, b);          // redraw with Hubie once the art is in
+  });
 
   m.querySelector('[data-closemodal]').onclick = () => m.classList.remove('open');
   const cv = document.getElementById('shareCanvas');
@@ -961,7 +1049,7 @@ function shareBet(id) {
   m.querySelector('[data-share-chat]').onclick = () => {
     S.chat = S.chat || [];
     const res2 = (b.status === 'won') ? 'won' : 'lost';
-    S.chat.push({ id: 'c' + Date.now(), bet: b.id,
+    S.chat.push({ id: 'c' + Date.now(), who: 'You', betId: b.id,
                   text: b.sel + ' @ ' + fmt(b.odds) + ' — ' + res2, at: 'Just now' });
     toast('Result posted to the chatroom', 'ok');
     m.classList.remove('open');
@@ -1068,6 +1156,7 @@ function bindPage() {
   });
   $$('.botnav button').forEach(b => b.onclick = () => {
     const n = b.dataset.nav;
+    if (n === 'casino') { toast('Casino sits in the Housebets shell, but this entry covers the sportsbook only', 'warn'); return; }
     if (n === 'bets') { S.myBetsTab = 'slip'; if (window.innerWidth <= 640 && S.slip.length) openSheet(); else go('bets'); }
     else if (n === 'soccer') go('football');
     else go(n);
@@ -1115,6 +1204,17 @@ function bindPage() {
   $$('[data-sel]').forEach(b => b.onclick = () => addToSlip(b.dataset));
   $$('[data-mbt]').forEach(b => b.onclick = () => { S.myBetsTab = b.dataset.mbt; renderSlip(); bindPage(); });
   $$('[data-share]').forEach(b => b.onclick = () => shareBet(b.dataset.share));
+  const cf = $('#chatForm');
+  if (cf) cf.onsubmit = e => {
+    e.preventDefault();
+    const inp = $('#chatMsg'); const v = (inp.value || '').trim();
+    if (!v) return;
+    S.chat = S.chat || [];
+    S.chat.push({ id: 'c' + Date.now(), who: 'You', text: v, at: 'Just now', local: true });
+    inp.value = '';
+    renderShell();
+    const el = $('.chatwrap'); if (el) el.scrollTop = el.scrollHeight;
+  };
 
   // search
   const q = $('#q'), q2 = $('#q2');

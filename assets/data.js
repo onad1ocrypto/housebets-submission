@@ -293,6 +293,15 @@ HB.heroPoster = {
   'liv-mun': 'assets/posters/liv-mun-hero.jpg'
 };
 
+/* ---------- chat seed ----------
+   Invented usernames. Hubie's line is advice, not money or XP.
+------------------------------------------------------------ */
+HB.seedChat = [
+  { who: 'Mika',  text: 'Arsenal look sharp today', at: '52:11' },
+  { who: 'Deniz', text: 'That Brighton price is huge for a side chasing the game', at: '52:40' },
+  { who: 'Hubie', text: 'Cash out is only the current offer, not a promise. It can move before you take it.', at: '53:02', hubie: true }
+];
+
 /* ---------- searchable index (teams, players, competitions, markets) ---------- */
 HB.searchIndex = (function () {
   const out = [];
