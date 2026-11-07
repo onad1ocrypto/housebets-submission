@@ -463,6 +463,8 @@ function pageLive() {
   return `
   <div class="phead"><button class="back" data-go="home">${I.back}</button><h1>Live now</h1></div>
   ${searchHTML()}
+  ${tabsHTML()}
+  <div class="tabsrule"></div>
   <div class="filters">
     ${[['all', 'All', live.length], ['soccer', 'Soccer', live.length], ['tennis', 'Tennis', 0], ['basket', 'Basketball', 0]]
       .map(([id, l, n]) => `<button class="fpill ${S.liveFilter === id ? 'on' : ''}" data-livef="${id}">${l}${n ? `<span class="n">${n}</span>` : ''}</button>`).join('')}

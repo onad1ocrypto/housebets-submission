@@ -153,12 +153,17 @@ a{ color:inherit; text-decoration:none; }
 }
 
 /* ---- the bet column breathes --------------------------------
-   A slow aqua glow plus a light line that travels along the top
-   edge. Stronger once there is something in the slip.
+   Four layers, all gold and all slow, so the column reads as
+   "your money" without shouting:
+     1. a wash that drifts through the background itself
+     2. a halo rising and falling behind the slip
+     3. the outer glow
+     4. the light line that travels the top edge
+   Everything speeds up once there is something in the slip.
 --------------------------------------------------------------- */
 @keyframes slipGlow{
   0%,100%{ box-shadow:0 0 0 1px rgba(247,200,96,.10), 0 0 26px -10px rgba(247,200,96,.13); }
-  50%    { box-shadow:0 0 0 1px rgba(247,200,96,.30), 0 0 50px -8px rgba(247,200,96,.32); }
+  50%    { box-shadow:0 0 0 1px rgba(247,200,96,.34), 0 0 56px -6px rgba(247,200,96,.40); }
 }
 @keyframes slipLine{
   0%   { transform:translateX(-100%); opacity:0; }
@@ -166,24 +171,74 @@ a{ color:inherit; text-decoration:none; }
   88%  { opacity:1; }
   100% { transform:translateX(100%); opacity:0; }
 }
-.panel{ animation:slipGlow 5.2s ease-in-out infinite; }
+/* the background colour itself moves: three stacked gradients
+   sliding at different speeds across an oversized canvas */
+@keyframes slipWash{
+  0%,100%{ background-position:50% 0%,  0% 100%, 50% 0%; }
+  33%    { background-position:20% 22%, 70%  64%, 50% 0%; }
+  66%    { background-position:82% 8%,  28%  34%, 50% 0%; }
+}
+/* a soft halo drifting under the slip content */
+@keyframes slipHalo{
+  0%,100%{ transform:translate3d(-7%,10%,0) scale(.88);  opacity:.30; }
+  50%    { transform:translate3d(8%,-11%,0) scale(1.18); opacity:.90; }
+}
+.panel{
+  background-color:var(--card);
+  background-image:
+    radial-gradient(115% 52% at 50% -6%,  rgba(247,200,96,.16), transparent 62%),
+    radial-gradient(90%  44% at 10% 110%, rgba(62,208,218,.085), transparent 60%),
+    linear-gradient(180deg, rgba(247,200,96,.06), transparent 44%, rgba(247,200,96,.032));
+  background-size:210% 210%, 180% 180%, 100% 100%;
+  background-repeat:no-repeat;
+  animation:slipGlow 5.2s ease-in-out infinite,
+            slipWash 13s ease-in-out infinite;
+}
+.panel > *{ position:relative; z-index:1; }
 .panel::before{
-  content:""; position:absolute; top:0; left:0; right:0; height:1px; z-index:3;
-  background:linear-gradient(90deg, transparent, rgba(247,200,96,.95), transparent);
+  content:""; position:absolute; top:0; left:0; right:0; height:2px; z-index:3;
+  background:linear-gradient(90deg, transparent, rgba(247,200,96,.95), rgba(255,241,204,.98), rgba(247,200,96,.95), transparent);
   animation:slipLine 5.2s ease-in-out infinite; pointer-events:none;
 }
-.panel.has-bets{ animation-duration:3.4s; }
+.panel::after{
+  content:""; position:absolute; inset:-32% -22%; z-index:0; pointer-events:none;
+  background:radial-gradient(48% 38% at 50% 50%, rgba(247,200,96,.20), transparent 70%);
+  animation:slipHalo 8s ease-in-out infinite;
+}
+.panel.has-bets{
+  animation:slipGlow 3.4s ease-in-out infinite,
+            slipWash 8.5s ease-in-out infinite;
+}
 .panel.has-bets::before{ animation-duration:3.4s; }
-/* on the full-width bets route the glow moves to the main column */
-body.route-bets .main{ animation:slipGlow 5.2s ease-in-out infinite; }
+.panel.has-bets::after{ animation-duration:5.2s; }
+/* on the full-width bets route the same treatment moves to the main column */
+body.route-bets .main{
+  background-color:var(--card);
+  background-image:
+    radial-gradient(115% 52% at 50% -6%,  rgba(247,200,96,.16), transparent 62%),
+    radial-gradient(90%  44% at 10% 110%, rgba(62,208,218,.085), transparent 60%),
+    linear-gradient(180deg, rgba(247,200,96,.06), transparent 44%, rgba(247,200,96,.032));
+  background-size:210% 210%, 180% 180%, 100% 100%;
+  background-repeat:no-repeat;
+  position:relative; overflow:hidden;
+  animation:slipGlow 5.2s ease-in-out infinite,
+            slipWash 13s ease-in-out infinite;
+}
+body.route-bets .main > *{ position:relative; z-index:1; }
 body.route-bets .main::before{
-  content:""; position:absolute; top:0; left:0; right:0; height:1px; z-index:3;
-  background:linear-gradient(90deg, transparent, rgba(247,200,96,.95), transparent);
+  content:""; position:absolute; top:0; left:0; right:0; height:2px; z-index:3;
+  background:linear-gradient(90deg, transparent, rgba(247,200,96,.95), rgba(255,241,204,.98), rgba(247,200,96,.95), transparent);
   animation:slipLine 5.2s ease-in-out infinite; pointer-events:none;
+}
+body.route-bets .main::after{
+  content:""; position:absolute; inset:-32% -22%; z-index:0; pointer-events:none;
+  background:radial-gradient(48% 38% at 50% 50%, rgba(247,200,96,.20), transparent 70%);
+  animation:slipHalo 8s ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce){
-  .panel, .panel::before, body.route-bets .main, body.route-bets .main::before{ animation:none; }
-  .panel{ box-shadow:0 0 0 1px rgba(247,200,96,.18); }
+  .panel, .panel::before, .panel::after,
+  body.route-bets .main, body.route-bets .main::before, body.route-bets .main::after{ animation:none; }
+  .panel, body.route-bets .main{ box-shadow:0 0 0 1px rgba(247,200,96,.18); }
 }
 
 /* ============================================================
@@ -236,6 +291,33 @@ body.route-bets .main::before{
   display:grid; place-items:center;
 }
 .tabsrule{ height:1px; background:var(--hair); margin:0 16px; }
+
+/* ---- the LIVE tab blinks ------------------------------------
+   A hard on/off blink (steps, not a fade) so it reads as a
+   broadcast light rather than a hover effect. The counter blinks
+   with it, and both beat faster once you are on the live page.
+--------------------------------------------------------------- */
+.tab[data-tab="live"]{ color:#FF7189; }
+.tab[data-tab="live"]::after{
+  content:""; flex:0 0 auto; width:6px; height:6px; border-radius:99px;
+  background:var(--live); margin-left:1px;
+  animation:liveBlink 1.1s steps(1, end) infinite;
+}
+.tab[data-tab="live"] .n{ animation:liveBlinkSoft 1.1s steps(1, end) infinite; }
+.tab[data-tab="live"].on{ color:var(--live); }
+.tab[data-tab="live"].on::after,
+.tab[data-tab="live"].on .n{ animation-duration:.82s; }
+@keyframes liveBlink{
+  0%,54%  { opacity:1;   box-shadow:0 0 9px rgba(244,31,80,.95), 0 0 3px rgba(244,31,80,1); }
+  55%,100%{ opacity:.16; box-shadow:none; }
+}
+@keyframes liveBlinkSoft{
+  0%,54%  { opacity:1; }
+  55%,100%{ opacity:.38; }
+}
+@media (prefers-reduced-motion: reduce){
+  .tab[data-tab="live"]::after, .tab[data-tab="live"] .n{ animation:none; }
+}
 
 /* ============================================================
    SECTIONS
