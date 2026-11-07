@@ -288,8 +288,10 @@ const SPORT_ICO = { soccer:'soccer', tennis:'tennis', basket:'basketball',
                     volley:'volleyball', rugby:'rugby' };
 function sportIcon(id){
   const f = SPORT_ICO[id];
-  return f ? `<img class="sport-ico" src="assets/icons/96/${f}.png" alt="" width="23" height="23">`
-           : (I[id] || '');
+  if (f) return `<img class="sport-ico" src="assets/icons/96/${f}.png" alt="" width="34" height="34">`;
+  /* Home and Live are inline SVG, not a ball image — wrap them so the tile
+     can size them the same way it sizes the rendered balls. */
+  return `<span class="sport-ico svg">${I[id] || ''}</span>`;
 }
 
 /* ---------------- shared nav rail ---------------- */
@@ -297,7 +299,9 @@ function tabsHTML() {
   return `<div class="tabs">
     ${HB.sports.map(s => {
       const on = (s.id === 'home' && S.route === 'home') || (s.id === 'live' && S.route === 'live') || (s.id === 'soccer' && S.route === 'football');
-      return `<button class="tab ${on ? 'on' : ''}" data-tab="${s.id}">${sportIcon(s.id)}${esc(s.label)}${s.count ? `<span class="n">${s.count}</span>` : ''}</button>`;
+      return `<button class="tab ${on ? 'on' : ''}" data-tab="${s.id}">`
+           + `<span class="tico">${sportIcon(s.id)}${s.count ? `<span class="n">${s.count}</span>` : ''}</span>`
+           + `<span class="tlab">${esc(s.short || s.label)}</span></button>`;
     }).join('')}
   </div>`;
 }

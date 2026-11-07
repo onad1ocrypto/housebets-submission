@@ -145,17 +145,20 @@ HB.matches = [
 ];
 
 /* ---------- sports nav ---------- */
+/* `short` is the label used inside the sport tile, where a long name
+   like "American Football" would wrap to three lines. `label` stays
+   full-length for toasts and the page heading. */
 HB.sports = [
-  { id: 'home',      label: 'Home',      icon: 'home',   count: 0 },
-  { id: 'live',      label: 'Live',      icon: 'live',   count: 13 },
-  { id: 'soccer',    label: 'Soccer',    icon: 'soccer', count: 0 },
-  { id: 'tennis',    label: 'Tennis',    icon: 'tennis', count: 0 },
-  { id: 'basket',    label: 'Basketball',icon: 'hoop',   count: 0 },
-  { id: 'baseball',  label: 'Baseball',  icon: 'base',   count: 0 },
-  { id: 'nfl',       label: 'American Football', icon: 'nfl', count: 0 },
-  { id: 'esports',   label: 'Esports',   icon: 'esport', count: 0 },
-  { id: 'volley',    label: 'Volleyball',icon: 'volley', count: 0 },
-  { id: 'rugby',     label: 'Rugby',     icon: 'rugby',  count: 0 }
+  { id: 'home',      label: 'Home',      short: 'Home',      icon: 'home',   count: 0 },
+  { id: 'live',      label: 'Live',      short: 'Live',      icon: 'live',   count: 13 },
+  { id: 'soccer',    label: 'Soccer',    short: 'Football',  icon: 'soccer', count: 0 },
+  { id: 'tennis',    label: 'Tennis',    short: 'Tennis',    icon: 'tennis', count: 0 },
+  { id: 'basket',    label: 'Basketball',short: 'Basket',    icon: 'hoop',   count: 0 },
+  { id: 'baseball',  label: 'Baseball',  short: 'Baseball',  icon: 'base',   count: 0 },
+  { id: 'nfl',       label: 'American Football', short: 'NFL', icon: 'nfl',  count: 0 },
+  { id: 'esports',   label: 'Esports',   short: 'Esports',   icon: 'esport', count: 0 },
+  { id: 'volley',    label: 'Volleyball',short: 'Volley',    icon: 'volley', count: 0 },
+  { id: 'rugby',     label: 'Rugby',     short: 'Rugby',     icon: 'rugby',  count: 0 }
 ];
 
 /* ---------- market groups (match page) ----------
