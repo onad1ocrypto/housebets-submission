@@ -206,12 +206,26 @@ function searchHTML() {
   </div>`;
 }
 
+
+/* ---- sport icons -------------------------------------------
+   Rendered ball images for the sports, inline SVG for
+   Home and Live which are not sports.
+------------------------------------------------------------ */
+const SPORT_ICO = { soccer:'soccer', tennis:'tennis', basket:'basketball',
+                    baseball:'baseball', nfl:'nfl', esports:'esports',
+                    volley:'volleyball', rugby:'rugby' };
+function sportIcon(id){
+  const f = SPORT_ICO[id];
+  return f ? `<img class="sport-ico" src="assets/icons/96/${f}.png" alt="" width="23" height="23">`
+           : (I[id] || '');
+}
+
 /* ---------------- shared nav rail ---------------- */
 function tabsHTML() {
   return `<div class="tabs">
     ${HB.sports.map(s => {
       const on = (s.id === 'home' && S.route === 'home') || (s.id === 'live' && S.route === 'live') || (s.id === 'soccer' && S.route === 'football');
-      return `<button class="tab ${on ? 'on' : ''}" data-tab="${s.id}">${I[s.icon] || ''}${esc(s.label)}${s.count ? `<span class="n">${s.count}</span>` : ''}</button>`;
+      return `<button class="tab ${on ? 'on' : ''}" data-tab="${s.id}">${sportIcon(s.id)}${esc(s.label)}${s.count ? `<span class="n">${s.count}</span>` : ''}</button>`;
     }).join('')}
   </div>`;
 }
@@ -806,7 +820,13 @@ function bindPage() {
   // tabs
   $$('.tab').forEach(b => b.onclick = () => {
     const id = b.dataset.tab;
-    if (id === 'live') go('live'); else if (id === 'soccer') go('football'); else go('home');
+    if (id === 'live') go('live');
+    else if (id === 'soccer') go('football');
+    else if (id === 'home') go('home');
+    else {
+      const nm = (HB.sports.find(x => x.id === id) || {}).label || 'That sport';
+      toast(`No ${nm.toLowerCase()} fixtures in this sample data`, 'warn');
+    }
   });
   $$('[data-mkttab]').forEach(b => b.onclick = () => { S.mktTab = b.dataset.mkttab; renderMarketsLive(); bindPage(); });
   $$('[data-livef]').forEach(b => b.onclick = () => { S.liveFilter = b.dataset.livef; renderShell(); });

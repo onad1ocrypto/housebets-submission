@@ -900,3 +900,12 @@ body.route-bets .place{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); colo
 .slipbar{ border-top:1px solid rgba(247,200,96,.30); }
 .slipbar .badge{ background:linear-gradient(180deg,#FDE7B4,#E9B23F); color:#1A1204; }
 .slipbar .amt{ color:var(--gold); }
+
+/* ---- rendered sport icons ---------------------------------- */
+.tab .sport-ico{
+  width:23px; height:23px; flex:0 0 23px; object-fit:contain; display:block;
+  filter:saturate(.92) brightness(.97);
+  transition:filter .18s ease, transform .18s ease;
+}
+.tab:hover .sport-ico{ filter:saturate(1) brightness(1.06); }
+.tab.on .sport-ico{ filter:saturate(1.05) brightness(1.12); transform:scale(1.06); }

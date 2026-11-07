@@ -139,7 +139,9 @@ HB.sports = [
   { id: 'basket',    label: 'Basketball',icon: 'hoop',   count: 0 },
   { id: 'baseball',  label: 'Baseball',  icon: 'base',   count: 0 },
   { id: 'nfl',       label: 'American Football', icon: 'nfl', count: 0 },
-  { id: 'esports',   label: 'Esports',   icon: 'esport', count: 0 }
+  { id: 'esports',   label: 'Esports',   icon: 'esport', count: 0 },
+  { id: 'volley',    label: 'Volleyball',icon: 'volley', count: 0 },
+  { id: 'rugby',     label: 'Rugby',     icon: 'rugby',  count: 0 }
 ];
 
 /* ---------- market groups (match page) ----------
